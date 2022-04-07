@@ -1,8 +1,6 @@
 import { Fragment } from 'react'
-import Spacer from '../components/Spacer'
-import CardHelper from '../helpers/CardHelper'
-import useGame from '../helpers/useGame'
-import { DeckCard } from '../model'
+import Spacer from '../../components/Spacer'
+import useGame from '../../helpers/useGame'
 import DeckCardElement from './DeckCardElement'
 
 const Deck = () => {

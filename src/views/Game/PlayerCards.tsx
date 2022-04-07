@@ -1,12 +1,11 @@
 import { Fragment } from 'react'
-import Spacer from '../components/Spacer'
-import CardHelper from '../helpers/CardHelper'
-import { Player } from '../model'
+import Spacer from '../../components/Spacer'
+import { GamePlayer } from '../../model'
 import DeckCardsWon from './DeckCardsWon'
 import PlayerCard from './PlayerCard'
 
 type PlayerCardsProps = {
-    player: Player
+    player: GamePlayer
 }
 
 const PlayerCards = ({ player }: PlayerCardsProps) => {

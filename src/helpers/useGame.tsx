@@ -1,14 +1,14 @@
 import { createContext, ReactElement, useContext, useMemo, useState } from 'react'
-import { Card, DeckCard, Player } from '../model'
+import { Card, DeckCard, GameRule, GamePlayer } from '../model'
 
 type GameContext = {
-    players: Player[]
-    setPlayers: React.Dispatch<React.SetStateAction<Player[]>>
+    players: GamePlayer[]
+    setPlayers: React.Dispatch<React.SetStateAction<GamePlayer[]>>
     playerIndex: number
     setPlayerIndex: React.Dispatch<React.SetStateAction<number>>
     deckCards: DeckCard[]
     setDeckCards: React.Dispatch<React.SetStateAction<DeckCard[]>>
-    playCard: (player: Player, card: Card) => void
+    playCard: (player: GamePlayer, card: Card) => void
     finishTurn: () => void
     winningDeckCard: DeckCard | null
 }
@@ -16,11 +16,13 @@ type GameContext = {
 const GameContext = createContext<GameContext>(null as unknown as GameContext)
 
 type ProvideGameProps = {
+    finishGame: () => void
+    gameRule: GameRule
     children: ReactElement
 }
 
-export function ProvideGame({ children }: ProvideGameProps) {
-    const gameData = useProvideGame()
+export function ProvideGame({ finishGame, gameRule, children }: ProvideGameProps) {
+    const gameData = useProvideGame({ finishGame, gameRule })
 
     return <GameContext.Provider value={gameData}>{children}</GameContext.Provider>
 }
@@ -29,12 +31,17 @@ export const useGame = () => {
     return useContext(GameContext)
 }
 
-const useProvideGame = (): GameContext => {
-    const [players, setPlayers] = useState<Player[]>([])
+type UseProvideGameProps = {
+    finishGame: () => void
+    gameRule: GameRule
+}
+
+const useProvideGame = ({ gameRule, finishGame }: UseProvideGameProps): GameContext => {
+    const [players, setPlayers] = useState<GamePlayer[]>([])
     const [playerIndex, setPlayerIndex] = useState<number>(0)
     const [deckCards, setDeckCards] = useState<DeckCard[]>([])
 
-    const playCard = (player: Player, card: Card) => {
+    const playCard = (player: GamePlayer, card: Card) => {
         setDeckCards((oldDeckCards) => {
             const isFirst = oldDeckCards.length === 0
             const newDeckCard: DeckCard = {

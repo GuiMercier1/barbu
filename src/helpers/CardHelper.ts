@@ -1,4 +1,4 @@
-import { Card, CardColor, Player } from '../model'
+import { Card, CardColor, GamePlayer } from '../model'
 
 const getCardLabel = (value: number): string => {
     return value <= 10 ? '' + value : value === 11 ? 'Valet' : value === 12 ? 'Dame' : value === 13 ? 'Roi' : 'As'
@@ -68,7 +68,7 @@ const sortCards = (cards: Card[]): Card[] => {
     return [...clubsCards, ...heartCards, ...sparesCards, ...diamondsCards]
 }
 
-const distributeCards = (players: Player[]): void => {
+const distributeCards = (players: GamePlayer[]): void => {
     const cards = CardHelper.getCards(players.length)
 
     const shuffledCards = cards.sort((a, b) => 0.5 - Math.random())

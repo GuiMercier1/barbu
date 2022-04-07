@@ -1,15 +1,20 @@
 import { Fragment, useEffect, useMemo } from 'react'
-import Spacer from '../components/Spacer'
-import CardHelper from '../helpers/CardHelper'
-import useGameData, { ProvideGame } from '../helpers/useGame'
-import useSpacing from '../helpers/useSpacing'
-import { Player } from '../model'
+import Spacer from '../../components/Spacer'
+import CardHelper from '../../helpers/CardHelper'
+import useGame, { ProvideGame } from '../../helpers/useGame'
+import useSpacing from '../../helpers/useSpacing'
+import { GameRule, GamePlayer } from '../../model'
 import Deck from './Deck'
 import PlayerCards from './PlayerCards'
 
-const Game = () => {
+type GameProps = {
+    gameRule: GameRule
+    finishGame: () => void
+}
+
+const Game = ({ gameRule, finishGame }: GameProps) => {
     return (
-        <ProvideGame>
+        <ProvideGame gameRule={gameRule} finishGame={finishGame}>
             <GameReady />
         </ProvideGame>
     )
@@ -18,7 +23,7 @@ const Game = () => {
 const GameReady = () => {
     const spacing = useSpacing()
 
-    const { players, setPlayers } = useGameData()
+    const { players, setPlayers } = useGame()
 
     useEffect(() => {
         const newPlayers = getPlayers()
@@ -26,7 +31,7 @@ const GameReady = () => {
     }, [])
 
     const getPlayers = () => {
-        const players: Player[] = [
+        const players: GamePlayer[] = [
             {
                 position: 0,
                 name: 'Joueur 1',

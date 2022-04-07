@@ -1,6 +1,6 @@
-import CardHelper from '../helpers/CardHelper'
-import useGame from '../helpers/useGame'
-import { DeckCard } from '../model'
+import CardHelper from '../../helpers/CardHelper'
+import useGame from '../../helpers/useGame'
+import { DeckCard } from '../../model'
 
 type DeckCardElementProps = {
     deckCard: DeckCard

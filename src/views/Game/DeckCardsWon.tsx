@@ -1,9 +1,9 @@
 import { Fragment } from 'react'
-import CardHelper from '../helpers/CardHelper'
-import { DeckCard, Player } from '../model'
+import CardHelper from '../../helpers/CardHelper'
+import { DeckCard, GamePlayer } from '../../model'
 
 type DeckCardsWonProps = {
-    player: Player
+    player: GamePlayer
 }
 
 const DeckCardsWon = ({ player }: DeckCardsWonProps) => {

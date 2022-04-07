@@ -1,10 +1,9 @@
-import { useMemo } from 'react'
-import CardHelper from '../helpers/CardHelper'
-import useGame from '../helpers/useGame'
-import { Card, Player } from '../model'
+import CardHelper from '../../helpers/CardHelper'
+import useGame from '../../helpers/useGame'
+import { Card, GamePlayer } from '../../model'
 
 type PlayerCardProps = {
-    player: Player
+    player: GamePlayer
     card: Card
 }
 

@@ -1,7 +1,7 @@
-import Game from './views/Game'
+import FullGame from './views/FullGame'
 
 function App() {
-    return <Game />
+    return <FullGame />
 }
 
 export default App
