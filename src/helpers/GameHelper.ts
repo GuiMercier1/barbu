@@ -4,8 +4,8 @@ const POINTS_FOR_BARBU = 30
 const POINTS_FOR_KING = 20
 const POINTS_FOR_LADY = 10
 const POINTS_FOR_HEART = 5
-const POINTS_FOR_PLUS_PLI = 10
-const POINTS_FOR_MOINS_PLI = -10
+const POINTS_FOR_PLUS_PLI = -10
+const POINTS_FOR_MOINS_PLI = 10
 const POINTS_FOR_LAST_PLI = 30
 
 const _countPointsSansBarbu: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
@@ -156,12 +156,14 @@ const _isSansDameFinished = (gamePlayers: GamePlayer[]): boolean => {
 const _isSansCoeurFinished = (gamePlayers: GamePlayer[]): boolean => {
     let playersHaveStillHearts = false
 
+    console.log('_isSansCoeurFinished')
     gamePlayers.forEach((player) => {
         player.cards.forEach((card) => {
             if (card.color === CardColor.COEUR) playersHaveStillHearts = true
         })
     })
 
+    console.log('_isSansCoeurFinished : ', !playersHaveStillHearts)
     return !playersHaveStillHearts
 }
 

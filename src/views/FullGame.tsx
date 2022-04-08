@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Spacer from '../components/Spacer'
 import GameHelper from '../helpers/GameHelper'
 import useSpacing from '../helpers/useSpacing'
@@ -72,10 +72,17 @@ const FullGame = () => {
         <div style={{ padding: spacing, paddingTop: 0 }}>
             <h1>Le barbu !</h1>
             <Spacer half />
+            TODO
+            <ul>
+                <li>Bug au passage du sans cœur</li>
+                <li>1er joueur tourne à chaque fin de sous-partie</li>
+                <li>La personne qui gagne le dernier deck distribue</li>
+            </ul>
+            <Spacer half />
             <span>Total des points :</span>
             <ul>
                 {players.map((player) => (
-                    <li>
+                    <li key={player.id}>
                         {player.name} :{' '}
                         {player.games.map((game) => game.gamePoints).reduce((prev, current) => prev + current, 0)}
                     </li>

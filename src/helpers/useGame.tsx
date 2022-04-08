@@ -179,6 +179,8 @@ const useProvideGame = ({ basePlayers, gameRuleData, finishGame }: UseProvideGam
     }
 
     useEffect(() => {
+        if (turnIndex === 0) return
+
         if (gameRuleData.checkGameFinished(players)) setGameStatus('finished')
     }, [turnIndex])
 
