@@ -25,11 +25,12 @@ export type DeckCardsWon = {
 }
 
 export type GamePlayer = {
+    id: string
     position: number
     name: string
     cards: Card[]
     deckCardsWon: DeckCardsWon[]
-    id: string
+    gamePoints: number
 }
 
 export enum GameRule {
@@ -44,10 +45,12 @@ export enum GameRule {
     SALADE = 8,
 }
 
+export type CountPointsFunction = (deckCardsWon: DeckCardsWon[]) => number
+
 export type GameRuleData = {
     label: string
     position: number
     gameRule: GameRule
     checkGameFinished: (gamePlayers: GamePlayer[]) => boolean
-    countPoints: (gamePlayer: GamePlayer) => number
+    countPoints: CountPointsFunction
 }

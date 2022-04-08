@@ -60,6 +60,7 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
                 cards: [],
                 deckCardsWon: [],
                 id: 'player_1',
+                gamePoints: 0,
             },
             {
                 position: 1,
@@ -67,6 +68,7 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
                 cards: [],
                 deckCardsWon: [],
                 id: 'player_2',
+                gamePoints: 0,
             },
             {
                 position: 2,
@@ -74,6 +76,7 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
                 cards: [],
                 deckCardsWon: [],
                 id: 'player_3',
+                gamePoints: 0,
             },
             {
                 position: 3,
@@ -81,6 +84,7 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
                 cards: [],
                 deckCardsWon: [],
                 id: 'player_4',
+                gamePoints: 0,
             },
         ]
 
@@ -176,13 +180,19 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
                 isLast: isLastTurn,
             }
 
-            return [
-                ...otherPlayers,
-                {
-                    ...looser,
-                    deckCardsWon: [...looser.deckCardsWon, newDeckCardsWon],
-                },
-            ]
+            const newDeckCardsWonList = [...looser.deckCardsWon, newDeckCardsWon]
+
+            const looserGamePoints = gameRuleData.countPoints(newDeckCardsWonList)
+
+            const newLooser = {
+                ...looser,
+                gamePoints: looserGamePoints,
+                deckCardsWon: newDeckCardsWonList,
+            }
+
+            console.log('Looser game points : ', looserGamePoints)
+
+            return [...otherPlayers, newLooser]
         })
 
         setTurnIndex((oldIndex) => oldIndex + 1)

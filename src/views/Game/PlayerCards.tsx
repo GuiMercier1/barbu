@@ -23,7 +23,7 @@ const PlayerCards = ({ player }: PlayerCardsProps) => {
             ))}
             <Spacer />
             <div>
-                <span>Cartes gagnées :</span>
+                <span>Cartes gagnées ({player.gamePoints} points)</span>
                 <Spacer half />
                 <DeckCardsWonElement player={player} />
             </div>

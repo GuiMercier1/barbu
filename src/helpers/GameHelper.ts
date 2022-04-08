@@ -1,4 +1,4 @@
-import { CardColor, GamePlayer, GameRule, GameRuleData } from '../model'
+import { CardColor, CountPointsFunction, DeckCardsWon, GamePlayer, GameRule, GameRuleData } from '../model'
 
 const POINTS_FOR_BARBU = 30
 const POINTS_FOR_KING = 20
@@ -8,23 +8,29 @@ const POINTS_FOR_PLUS_PLI = 10
 const POINTS_FOR_MOINS_PLI = -10
 const POINTS_FOR_LAST_PLI = 30
 
-const _countPointsSansBarbu = (gamePlayer: GamePlayer): number => {
+const _countPointsSansBarbu: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points = 0
 
-    gamePlayer.deckCardsWon.forEach((deckCardsWon) => {
+    console.log('Counting points sans barbu !')
+
+    deckCardsWon.forEach((deckCardsWon) => {
         deckCardsWon.deckCards.forEach((deckCard) => {
             const card = deckCard.card
-            if (card.value === 13 && card.color === CardColor.COEUR) points = POINTS_FOR_BARBU
+            console.log('Card : ', card)
+            if (card.value === 13 && card.color === CardColor.COEUR) {
+                console.log('Adding points ! ')
+                points = POINTS_FOR_BARBU
+            }
         })
     })
 
     return points
 }
 
-const _countPointsSansRoi = (gamePlayer: GamePlayer): number => {
+const _countPointsSansRoi: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points = 0
 
-    gamePlayer.deckCardsWon.forEach((deckCardsWon) => {
+    deckCardsWon.forEach((deckCardsWon) => {
         deckCardsWon.deckCards.forEach((deckCard) => {
             const card = deckCard.card
             if (card.value === 13) points += POINTS_FOR_KING
@@ -34,10 +40,10 @@ const _countPointsSansRoi = (gamePlayer: GamePlayer): number => {
     return points
 }
 
-const _countPointsSansDame = (gamePlayer: GamePlayer): number => {
+const _countPointsSansDame: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points = 0
 
-    gamePlayer.deckCardsWon.forEach((deckCardsWon) => {
+    deckCardsWon.forEach((deckCardsWon) => {
         deckCardsWon.deckCards.forEach((deckCard) => {
             const card = deckCard.card
             if (card.value === 12) points += POINTS_FOR_LADY
@@ -47,10 +53,10 @@ const _countPointsSansDame = (gamePlayer: GamePlayer): number => {
     return points
 }
 
-const _countPointsSansCoeur = (gamePlayer: GamePlayer): number => {
+const _countPointsSansCoeur: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points = 0
 
-    gamePlayer.deckCardsWon.forEach((deckCardsWon) => {
+    deckCardsWon.forEach((deckCardsWon) => {
         deckCardsWon.deckCards.forEach((deckCard) => {
             const card = deckCard.card
             if (card.color === CardColor.COEUR) points += POINTS_FOR_HEART
@@ -60,33 +66,33 @@ const _countPointsSansCoeur = (gamePlayer: GamePlayer): number => {
     return points
 }
 
-const _countPointsMoinsDePli = (gamePlayer: GamePlayer): number => {
-    return gamePlayer.deckCardsWon.length * POINTS_FOR_MOINS_PLI
+const _countPointsMoinsDePli: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
+    return deckCardsWon.length * POINTS_FOR_MOINS_PLI
 }
 
-const _countPointsPlusDePli = (gamePlayer: GamePlayer): number => {
-    return gamePlayer.deckCardsWon.length * POINTS_FOR_PLUS_PLI
+const _countPointsPlusDePli: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
+    return deckCardsWon.length * POINTS_FOR_PLUS_PLI
 }
 
-const _countPointsDernierPli = (gamePlayer: GamePlayer): number => {
+const _countPointsDernierPli: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points = 0
 
-    gamePlayer.deckCardsWon.forEach((deckCardsWon) => {
+    deckCardsWon.forEach((deckCardsWon) => {
         if (deckCardsWon.isLast) points += POINTS_FOR_LAST_PLI
     })
 
     return points
 }
 
-const _countPointsReussite = (gamePlayer: GamePlayer): number => {
+const _countPointsReussite: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     throw 'Not managed yet'
 }
-const _countPointsSalade = (gamePlayer: GamePlayer): number => {
+const _countPointsSalade: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points =
-        _countPointsSansBarbu(gamePlayer) +
-        _countPointsSansDame(gamePlayer) +
-        _countPointsSansCoeur(gamePlayer) +
-        _countPointsMoinsDePli(gamePlayer)
+        _countPointsSansBarbu(deckCardsWon) +
+        _countPointsSansDame(deckCardsWon) +
+        _countPointsSansCoeur(deckCardsWon) +
+        _countPointsMoinsDePli(deckCardsWon)
 
     return points
 }

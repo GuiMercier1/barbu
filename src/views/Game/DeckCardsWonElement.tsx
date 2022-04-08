@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import CardHelper from '../../helpers/CardHelper'
-import { DeckCard, DeckCardsWon, GamePlayer } from '../../model'
+import { DeckCardsWon, GamePlayer } from '../../model'
 
 type DeckCardsWonProps = {
     player: GamePlayer
@@ -9,9 +9,9 @@ type DeckCardsWonProps = {
 const DeckCardsWonElement = ({ player }: DeckCardsWonProps) => {
     return (
         <div>
-            {player.deckCardsWon.map((deckCardsWon) => {
+            {player.deckCardsWon.map((deckCardsWon, index) => {
                 return (
-                    <Fragment>
+                    <Fragment key={index}>
                         <DeckCardsWonCard deckCardsWon={deckCardsWon} />
                         <div style={{ width: '100%', border: '1px solid black' }}></div>
                     </Fragment>
@@ -29,7 +29,7 @@ const DeckCardsWonCard = ({ deckCardsWon }: DeckCardsWonCardProps) => {
     return (
         <div>
             {deckCardsWon.deckCards.map((deckCard) => {
-                return <div>{CardHelper.getCardFullLabel(deckCard.card)}</div>
+                return <div key={deckCard.card.id}>{CardHelper.getCardFullLabel(deckCard.card)}</div>
             })}
         </div>
     )
