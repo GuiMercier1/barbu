@@ -5,17 +5,18 @@ import { Card, GamePlayer } from '../../model'
 type PlayerCardProps = {
     player: GamePlayer
     card: Card
+    isMyTurn: boolean
 }
 
-const PlayerCard = ({ player, card }: PlayerCardProps) => {
+const PlayerCard = ({ player, card, isMyTurn }: PlayerCardProps) => {
     const { playCard, players, playerIndex, deckCards } = useGame()
 
     const borderColor = CardHelper.getCardCssColor(card.color)
     const fullLabel = CardHelper.getCardFullLabel(card)
 
     const checkCanPlay = (): boolean => {
-        if (deckCards.length === players.length) return false
-        if (!(playerIndex === player.position)) return false
+        if (!isMyTurn) return false
+        // If it is my turn and no card played
         if (deckCards.length === 0) return true
 
         const mainCardColor = deckCards[0].card.color

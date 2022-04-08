@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useMemo } from 'react'
 import Spacer from '../../components/Spacer'
 import useGame from '../../helpers/useGame'
 import { GamePlayer } from '../../model'
@@ -10,7 +10,20 @@ type PlayerCardsProps = {
 }
 
 const PlayerCards = ({ player }: PlayerCardsProps) => {
-    const { gameStatus, dealerID } = useGame()
+    const { gameStatus, playerIndex, dealerID, winningDeckCard, deckCards, players } = useGame()
+
+    const isMyTurn = useMemo((): boolean => {
+        // No player
+        if (gameStatus === 'finished') return false
+        // Every players has played
+        if (deckCards.length === players.length) return false
+        else {
+            console.log('Player index compared to position : ', playerIndex, player)
+            return playerIndex === player.position
+        }
+    }, [gameStatus, deckCards, players, winningDeckCard, playerIndex, player])
+
+    console.log('Is my turn : ', isMyTurn, player)
 
     return (
         <div>
@@ -22,7 +35,7 @@ const PlayerCards = ({ player }: PlayerCardsProps) => {
                     <Spacer />
                     {player.cards.map((card) => (
                         <Fragment key={card.id}>
-                            <PlayerCard player={player} card={card} />
+                            <PlayerCard player={player} card={card} isMyTurn={isMyTurn} />
                             <Spacer quarter />
                         </Fragment>
                     ))}

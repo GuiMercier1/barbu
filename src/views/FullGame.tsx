@@ -79,8 +79,6 @@ const FullGame = () => {
             <Spacer half />
             TODO
             <ul>
-                <li>Bug au passage du sans cœur</li>
-                <li>1er joueur tourne à chaque fin de sous-partie</li>
                 <li>La personne qui gagne le dernier deck distribue</li>
             </ul>
             <Spacer half />

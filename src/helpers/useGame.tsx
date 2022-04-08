@@ -55,6 +55,7 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
     const [deckCards, setDeckCards] = useState<DeckCard[]>([])
     const [turnIndex, setTurnIndex] = useState<number>(0)
     const [gameStatus, setGameStatus] = useState<GameStatus>('running')
+    const [lastWinnerID, setLastWinnerID] = useState<string | null>()
 
     useEffect(() => {
         setPlayers(getPlayers())
@@ -158,17 +159,15 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
     }
 
     const finishTurn = () => {
-        const winningDeckCard = getWinningDeckCard()
-
         if (!winningDeckCard) {
             alert('Impossible de finir le tour maintenant !')
             return
         }
 
         setPlayers((oldPlayers) => {
-            const looser = oldPlayers.find((player) => player.position === winningDeckCard.playedBy.position)
+            const winner = oldPlayers.find((player) => player.position === winningDeckCard.playedBy.position)
 
-            if (looser === undefined) {
+            if (winner === undefined) {
                 throw 'Erreur lors du finish turn'
             }
 
@@ -180,17 +179,27 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
                 isLast: isLastTurn,
             }
 
-            const newDeckCardsWonList = [...looser.deckCardsWon, newDeckCardsWon]
+            const newDeckCardsWonList = [...winner.deckCardsWon, newDeckCardsWon]
 
-            const looserGamePoints = gameRuleData.countPoints(newDeckCardsWonList)
+            const winnerGamePoints = gameRuleData.countPoints(newDeckCardsWonList)
 
-            const newLooser = {
-                ...looser,
-                gamePoints: looserGamePoints,
+            const newWinnerData = {
+                ...winner,
+                gamePoints: winnerGamePoints,
                 deckCardsWon: newDeckCardsWonList,
             }
 
-            return [...otherPlayers, newLooser]
+            const newPlayers = [...otherPlayers, newWinnerData]
+
+            return newPlayers.map((player) => {
+                const newPosition =
+                    (player.globalPosition + (basePlayers.length - winner.globalPosition)) % basePlayers.length
+
+                return {
+                    ...player,
+                    position: newPosition,
+                }
+            })
         })
 
         setTurnIndex((oldIndex) => oldIndex + 1)
@@ -203,6 +212,7 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
         if (gameRuleData.checkGameFinished(players)) setGameStatus('finished')
     }, [turnIndex])
 
+    // Careful, winning deck card does not wait the end of the turn !
     const winningDeckCard: DeckCard | null = useMemo(getWinningDeckCard, [deckCards])
 
     return {
