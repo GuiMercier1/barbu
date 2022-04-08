@@ -33,15 +33,17 @@ export type Player = {
     id: string
     name: string
     games: PlayerGameData[]
+    globalPosition: number
 }
 
 export type GamePlayer = {
     id: string
-    position: number
     name: string
     cards: Card[]
     deckCardsWon: DeckCardsWon[]
     gamePoints: number
+    globalPosition: number
+    position: number
 }
 
 export enum GameRule {

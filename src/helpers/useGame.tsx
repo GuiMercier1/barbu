@@ -17,19 +17,21 @@ type GameContext = {
     gameRuleData: GameRuleData
     gameStatus: GameStatus
     finishGame: (gamePlayers: GamePlayer[]) => void
+    dealerID: string
 }
 
 const GameContext = createContext<GameContext>(null as unknown as GameContext)
 
 type ProvideGameProps = {
     basePlayers: Player[]
+    dealerID: string
     finishGame: (gamePlayers: GamePlayer[]) => void
     gameRuleData: GameRuleData
     children: ReactElement
 }
 
-export function ProvideGame({ basePlayers, finishGame, gameRuleData, children }: ProvideGameProps) {
-    const gameData = useProvideGame({ basePlayers, finishGame, gameRuleData })
+export function ProvideGame({ basePlayers, dealerID, finishGame, gameRuleData, children }: ProvideGameProps) {
+    const gameData = useProvideGame({ basePlayers, dealerID, finishGame, gameRuleData })
 
     return <GameContext.Provider value={gameData}>{children}</GameContext.Provider>
 }
@@ -40,34 +42,51 @@ export const useGame = () => {
 
 type UseProvideGameProps = {
     basePlayers: Player[]
+    dealerID: string
     finishGame: (gamePlayers: GamePlayer[]) => void
     gameRuleData: GameRuleData
 }
 
-const useProvideGame = ({ basePlayers, gameRuleData, finishGame }: UseProvideGameProps): GameContext => {
+const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: UseProvideGameProps): GameContext => {
+    const amountOfTurns = useRef<number>(0)
+
     const [players, setPlayers] = useState<GamePlayer[]>([])
     const [playerIndex, setPlayerIndex] = useState<number>(0)
     const [deckCards, setDeckCards] = useState<DeckCard[]>([])
     const [turnIndex, setTurnIndex] = useState<number>(0)
     const [gameStatus, setGameStatus] = useState<GameStatus>('running')
 
-    const amountOfTurns = useRef<number>(0)
-    const isLastTurn = turnIndex + 1 === amountOfTurns.current
-
     useEffect(() => {
-        const newPlayers = getPlayers()
-        setPlayers(newPlayers)
+        setPlayers(getPlayers())
     }, [])
 
-    const getPlayers = () => {
-        const players: GamePlayer[] = basePlayers.map((basePlayer, index) => {
+    const isLastTurn = turnIndex + 1 === amountOfTurns.current
+
+    function getPlayers(): GamePlayer[] {
+        const firstPlayerToPlay = basePlayers.find((basePlayer) => basePlayer.id === dealerID)
+
+        if (!firstPlayerToPlay) {
+            console.error('useProvideGame > getFirstPositionToPlay : No player found for id : ', dealerID, basePlayers)
+            throw 'useProvideGame > getFirstPositionToPlay : No player found'
+        }
+
+        const players: GamePlayer[] = basePlayers.map((basePlayer) => {
+            const newPosition =
+                (basePlayer.globalPosition + (basePlayers.length - firstPlayerToPlay.globalPosition)) %
+                basePlayers.length
+
+            console.log('Dealer ID : ', dealerID)
+            console.log('Base Player : ', basePlayer)
+            console.log('New position : ', newPosition)
+
             return {
                 id: basePlayer.id,
                 name: basePlayer.name,
-                position: index,
                 cards: [],
                 deckCardsWon: [],
                 gamePoints: 0,
+                globalPosition: basePlayer.globalPosition,
+                position: newPosition,
             }
         })
 
@@ -199,6 +218,7 @@ const useProvideGame = ({ basePlayers, gameRuleData, finishGame }: UseProvideGam
         gameRuleData,
         gameStatus,
         finishGame,
+        dealerID,
     }
 }
 

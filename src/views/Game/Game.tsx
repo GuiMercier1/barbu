@@ -7,13 +7,14 @@ import PlayerCards from './PlayerCards'
 
 type GameProps = {
     players: Player[]
+    dealerID: string
     gameRuleData: GameRuleData
     finishGame: (gamePlayers: GamePlayer[]) => void
 }
 
-const Game = ({ players, gameRuleData, finishGame }: GameProps) => {
+const Game = ({ players, dealerID, gameRuleData, finishGame }: GameProps) => {
     return (
-        <ProvideGame basePlayers={players} gameRuleData={gameRuleData} finishGame={finishGame}>
+        <ProvideGame basePlayers={players} dealerID={dealerID} gameRuleData={gameRuleData} finishGame={finishGame}>
             <GameReady />
         </ProvideGame>
     )
@@ -23,7 +24,7 @@ const GameReady = () => {
     const { players, gameRuleData, gameStatus, finishGame } = useGame()
 
     const sortedPlayers = useMemo(() => {
-        return players.sort((playerA, playerB) => playerA.position - playerB.position)
+        return players.sort((playerA, playerB) => playerA.globalPosition - playerB.globalPosition)
     }, [players])
 
     const nextGame = () => {

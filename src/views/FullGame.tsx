@@ -13,21 +13,25 @@ const FullGame = () => {
             id: 'player_1',
             name: 'Joueur 1',
             games: [],
+            globalPosition: 0,
         },
         {
             id: 'player_2',
             name: 'Joueur 2',
             games: [],
+            globalPosition: 1,
         },
         {
             id: 'player_3',
             name: 'Joueur 3',
             games: [],
+            globalPosition: 2,
         },
         {
             id: 'player_4',
             name: 'Joueur 4',
             games: [],
+            globalPosition: 3,
         },
     ]
 
@@ -36,6 +40,7 @@ const FullGame = () => {
     const [ruleIndex, setRuleIndex] = useState<number>(0)
 
     const currentGame = GameHelper.allGamesRules[ruleIndex]
+    const dealerID = players[Math.ceil(ruleIndex % players.length)].id
 
     const finishGame = (gamePlayers: GamePlayer[]) => {
         setPlayers((oldPlayers) => {
@@ -93,6 +98,7 @@ const FullGame = () => {
                 <Game
                     key={currentGame.position + currentGame.label + currentGame.gameRule}
                     players={players}
+                    dealerID={dealerID}
                     gameRuleData={currentGame}
                     finishGame={finishGame}
                 />

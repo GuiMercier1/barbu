@@ -10,12 +10,12 @@ type PlayerCardsProps = {
 }
 
 const PlayerCards = ({ player }: PlayerCardsProps) => {
-    const { gameStatus } = useGame()
+    const { gameStatus, dealerID } = useGame()
 
     return (
         <div>
             <span>
-                {player.name} (#{player.position})
+                {player.name} (#{player.position}) {dealerID === player.id ? '(D)' : ''}
             </span>
             {gameStatus === 'running' && (
                 <Fragment>
