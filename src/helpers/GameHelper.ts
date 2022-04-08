@@ -11,14 +11,10 @@ const POINTS_FOR_LAST_PLI = 30
 const _countPointsSansBarbu: CountPointsFunction = (deckCardsWon: DeckCardsWon[]): number => {
     let points = 0
 
-    console.log('Counting points sans barbu !')
-
     deckCardsWon.forEach((deckCardsWon) => {
         deckCardsWon.deckCards.forEach((deckCard) => {
             const card = deckCard.card
-            console.log('Card : ', card)
             if (card.value === 13 && card.color === CardColor.COEUR) {
-                console.log('Adding points ! ')
                 points = POINTS_FOR_BARBU
             }
         })
@@ -225,49 +221,49 @@ const allGamesRules: GameRuleData[] = [
         label: 'Sans Roi',
         checkGameFinished: _isSansRoiFinished,
         countPoints: _countPointsSansRoi,
-        position: 0,
+        position: 1,
     },
     {
         gameRule: GameRule.SANS_DAME,
         label: 'Sans Dame',
         checkGameFinished: _isSansDameFinished,
         countPoints: _countPointsSansDame,
-        position: 1,
+        position: 2,
     },
     {
         gameRule: GameRule.SANS_COEUR,
         label: 'Sans Coeur',
         checkGameFinished: _isSansCoeurFinished,
         countPoints: _countPointsSansCoeur,
-        position: 2,
+        position: 3,
     },
     {
         gameRule: GameRule.MOINS_DE_PLI,
         label: 'Moinss de pli',
         checkGameFinished: _isMoinsDePliFinished,
         countPoints: _countPointsMoinsDePli,
-        position: 3,
+        position: 4,
     },
     {
         gameRule: GameRule.PLUS_DE_PLI,
         label: 'Plus de pli',
         checkGameFinished: _isPlusDePliFinished,
         countPoints: _countPointsPlusDePli,
-        position: 4,
+        position: 5,
     },
     {
         gameRule: GameRule.DERNIER_PLI,
         label: 'Dernier pli',
         checkGameFinished: _isDernierPliFinished,
         countPoints: _countPointsDernierPli,
-        position: 5,
+        position: 6,
     },
     {
         gameRule: GameRule.SALADE,
         label: 'Salade',
         checkGameFinished: _isSaladeFinished,
         countPoints: _countPointsSalade,
-        position: 6,
+        position: 7,
     },
 ]
 

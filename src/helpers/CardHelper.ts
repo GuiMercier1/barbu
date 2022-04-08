@@ -72,7 +72,6 @@ const distributeCards = (players: GamePlayer[]): number => {
     const cards = CardHelper.getCards(players.length)
 
     const shuffledCards = cards.sort((a, b) => 0.5 - Math.random())
-    console.log('Shuffled cards : ', shuffledCards)
 
     const amountOfCards = Math.floor(cards.length / players.length)
 

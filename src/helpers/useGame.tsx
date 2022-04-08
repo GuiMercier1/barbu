@@ -1,6 +1,8 @@
 import { createContext, ReactElement, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { Card, DeckCard, DeckCardsWon, GamePlayer, GameRuleData } from '../model'
+import { Card, DeckCard, DeckCardsWon, GamePlayer, GameRuleData, Player } from '../model'
 import CardHelper from './CardHelper'
+
+type GameStatus = 'running' | 'finished'
 
 type GameContext = {
     players: GamePlayer[]
@@ -13,18 +15,21 @@ type GameContext = {
     finishTurn: () => void
     winningDeckCard: DeckCard | null
     gameRuleData: GameRuleData
+    gameStatus: GameStatus
+    finishGame: (gamePlayers: GamePlayer[]) => void
 }
 
 const GameContext = createContext<GameContext>(null as unknown as GameContext)
 
 type ProvideGameProps = {
-    finishGame: () => void
+    basePlayers: Player[]
+    finishGame: (gamePlayers: GamePlayer[]) => void
     gameRuleData: GameRuleData
     children: ReactElement
 }
 
-export function ProvideGame({ finishGame, gameRuleData, children }: ProvideGameProps) {
-    const gameData = useProvideGame({ finishGame, gameRuleData })
+export function ProvideGame({ basePlayers, finishGame, gameRuleData, children }: ProvideGameProps) {
+    const gameData = useProvideGame({ basePlayers, finishGame, gameRuleData })
 
     return <GameContext.Provider value={gameData}>{children}</GameContext.Provider>
 }
@@ -34,15 +39,17 @@ export const useGame = () => {
 }
 
 type UseProvideGameProps = {
-    finishGame: () => void
+    basePlayers: Player[]
+    finishGame: (gamePlayers: GamePlayer[]) => void
     gameRuleData: GameRuleData
 }
 
-const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): GameContext => {
+const useProvideGame = ({ basePlayers, gameRuleData, finishGame }: UseProvideGameProps): GameContext => {
     const [players, setPlayers] = useState<GamePlayer[]>([])
     const [playerIndex, setPlayerIndex] = useState<number>(0)
     const [deckCards, setDeckCards] = useState<DeckCard[]>([])
     const [turnIndex, setTurnIndex] = useState<number>(0)
+    const [gameStatus, setGameStatus] = useState<GameStatus>('running')
 
     const amountOfTurns = useRef<number>(0)
     const isLastTurn = turnIndex + 1 === amountOfTurns.current
@@ -53,44 +60,18 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
     }, [])
 
     const getPlayers = () => {
-        const players: GamePlayer[] = [
-            {
-                position: 0,
-                name: 'Joueur 1',
+        const players: GamePlayer[] = basePlayers.map((basePlayer, index) => {
+            return {
+                id: basePlayer.id,
+                name: basePlayer.name,
+                position: index,
                 cards: [],
                 deckCardsWon: [],
-                id: 'player_1',
                 gamePoints: 0,
-            },
-            {
-                position: 1,
-                name: 'Joueur 2',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_2',
-                gamePoints: 0,
-            },
-            {
-                position: 2,
-                name: 'Joueur 3',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_3',
-                gamePoints: 0,
-            },
-            {
-                position: 3,
-                name: 'Joueur 4',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_4',
-                gamePoints: 0,
-            },
-        ]
+            }
+        })
 
         amountOfTurns.current = CardHelper.distributeCards(players)
-
-        console.log('Players with cards : ', players)
 
         return players
     }
@@ -190,14 +171,16 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
                 deckCardsWon: newDeckCardsWonList,
             }
 
-            console.log('Looser game points : ', looserGamePoints)
-
             return [...otherPlayers, newLooser]
         })
 
         setTurnIndex((oldIndex) => oldIndex + 1)
         setDeckCards([])
     }
+
+    useEffect(() => {
+        if (gameRuleData.checkGameFinished(players)) setGameStatus('finished')
+    }, [turnIndex])
 
     const winningDeckCard: DeckCard | null = useMemo(getWinningDeckCard, [deckCards])
 
@@ -212,6 +195,8 @@ const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): Game
         finishTurn,
         winningDeckCard,
         gameRuleData,
+        gameStatus,
+        finishGame,
     }
 }
 

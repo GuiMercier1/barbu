@@ -24,6 +24,17 @@ export type DeckCardsWon = {
     deckCards: DeckCard[]
 }
 
+export type PlayerGameData = {
+    gameRule: GameRule
+    gamePoints: number
+}
+
+export type Player = {
+    id: string
+    name: string
+    games: PlayerGameData[]
+}
+
 export type GamePlayer = {
     id: string
     position: number
