@@ -1,18 +1,18 @@
 import { Fragment } from 'react'
 import CardHelper from '../../helpers/CardHelper'
-import { DeckCard, GamePlayer } from '../../model'
+import { DeckCard, DeckCardsWon, GamePlayer } from '../../model'
 
 type DeckCardsWonProps = {
     player: GamePlayer
 }
 
-const DeckCardsWon = ({ player }: DeckCardsWonProps) => {
+const DeckCardsWonElement = ({ player }: DeckCardsWonProps) => {
     return (
         <div>
-            {player.deckCardsWon.map((deckCards) => {
+            {player.deckCardsWon.map((deckCardsWon) => {
                 return (
                     <Fragment>
-                        <DeckCardsWonElement deckCards={deckCards} />
+                        <DeckCardsWonCard deckCardsWon={deckCardsWon} />
                         <div style={{ width: '100%', border: '1px solid black' }}></div>
                     </Fragment>
                 )
@@ -21,18 +21,18 @@ const DeckCardsWon = ({ player }: DeckCardsWonProps) => {
     )
 }
 
-type DeckCardsWonElementProps = {
-    deckCards: DeckCard[]
+type DeckCardsWonCardProps = {
+    deckCardsWon: DeckCardsWon
 }
 
-const DeckCardsWonElement = ({ deckCards }: DeckCardsWonElementProps) => {
+const DeckCardsWonCard = ({ deckCardsWon }: DeckCardsWonCardProps) => {
     return (
         <div>
-            {deckCards.map((deckCard) => {
+            {deckCardsWon.deckCards.map((deckCard) => {
                 return <div>{CardHelper.getCardFullLabel(deckCard.card)}</div>
             })}
         </div>
     )
 }
 
-export default DeckCardsWon
+export default DeckCardsWonElement

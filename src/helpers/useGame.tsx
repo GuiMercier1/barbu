@@ -1,5 +1,6 @@
-import { createContext, ReactElement, useContext, useMemo, useState } from 'react'
-import { Card, DeckCard, GameRule, GamePlayer } from '../model'
+import { createContext, ReactElement, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Card, DeckCard, DeckCardsWon, GamePlayer, GameRuleData } from '../model'
+import CardHelper from './CardHelper'
 
 type GameContext = {
     players: GamePlayer[]
@@ -11,18 +12,19 @@ type GameContext = {
     playCard: (player: GamePlayer, card: Card) => void
     finishTurn: () => void
     winningDeckCard: DeckCard | null
+    gameRuleData: GameRuleData
 }
 
 const GameContext = createContext<GameContext>(null as unknown as GameContext)
 
 type ProvideGameProps = {
     finishGame: () => void
-    gameRule: GameRule
+    gameRuleData: GameRuleData
     children: ReactElement
 }
 
-export function ProvideGame({ finishGame, gameRule, children }: ProvideGameProps) {
-    const gameData = useProvideGame({ finishGame, gameRule })
+export function ProvideGame({ finishGame, gameRuleData, children }: ProvideGameProps) {
+    const gameData = useProvideGame({ finishGame, gameRuleData })
 
     return <GameContext.Provider value={gameData}>{children}</GameContext.Provider>
 }
@@ -33,13 +35,61 @@ export const useGame = () => {
 
 type UseProvideGameProps = {
     finishGame: () => void
-    gameRule: GameRule
+    gameRuleData: GameRuleData
 }
 
-const useProvideGame = ({ gameRule, finishGame }: UseProvideGameProps): GameContext => {
+const useProvideGame = ({ gameRuleData, finishGame }: UseProvideGameProps): GameContext => {
     const [players, setPlayers] = useState<GamePlayer[]>([])
     const [playerIndex, setPlayerIndex] = useState<number>(0)
     const [deckCards, setDeckCards] = useState<DeckCard[]>([])
+    const [turnIndex, setTurnIndex] = useState<number>(0)
+
+    const amountOfTurns = useRef<number>(0)
+    const isLastTurn = turnIndex + 1 === amountOfTurns.current
+
+    useEffect(() => {
+        const newPlayers = getPlayers()
+        setPlayers(newPlayers)
+    }, [])
+
+    const getPlayers = () => {
+        const players: GamePlayer[] = [
+            {
+                position: 0,
+                name: 'Joueur 1',
+                cards: [],
+                deckCardsWon: [],
+                id: 'player_1',
+            },
+            {
+                position: 1,
+                name: 'Joueur 2',
+                cards: [],
+                deckCardsWon: [],
+                id: 'player_2',
+            },
+            {
+                position: 2,
+                name: 'Joueur 3',
+                cards: [],
+                deckCardsWon: [],
+                id: 'player_3',
+            },
+            {
+                position: 3,
+                name: 'Joueur 4',
+                cards: [],
+                deckCardsWon: [],
+                id: 'player_4',
+            },
+        ]
+
+        amountOfTurns.current = CardHelper.distributeCards(players)
+
+        console.log('Players with cards : ', players)
+
+        return players
+    }
 
     const playCard = (player: GamePlayer, card: Card) => {
         setDeckCards((oldDeckCards) => {
@@ -120,15 +170,22 @@ const useProvideGame = ({ gameRule, finishGame }: UseProvideGameProps): GameCont
 
             const otherPlayers = oldPlayers.filter((player) => player.position !== winningDeckCard.playedBy.position)
 
+            const newDeckCardsWon: DeckCardsWon = {
+                order: turnIndex,
+                deckCards,
+                isLast: isLastTurn,
+            }
+
             return [
                 ...otherPlayers,
                 {
                     ...looser,
-                    deckCardsWon: [...looser.deckCardsWon, [...deckCards]],
+                    deckCardsWon: [...looser.deckCardsWon, newDeckCardsWon],
                 },
             ]
         })
 
+        setTurnIndex((oldIndex) => oldIndex + 1)
         setDeckCards([])
     }
 
@@ -144,6 +201,7 @@ const useProvideGame = ({ gameRule, finishGame }: UseProvideGameProps): GameCont
         playCard,
         finishTurn,
         winningDeckCard,
+        gameRuleData,
     }
 }
 

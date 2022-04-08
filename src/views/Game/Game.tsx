@@ -1,80 +1,33 @@
-import { Fragment, useEffect, useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import Spacer from '../../components/Spacer'
-import CardHelper from '../../helpers/CardHelper'
 import useGame, { ProvideGame } from '../../helpers/useGame'
-import useSpacing from '../../helpers/useSpacing'
-import { GameRule, GamePlayer } from '../../model'
+import { GameRuleData } from '../../model'
 import Deck from './Deck'
 import PlayerCards from './PlayerCards'
 
 type GameProps = {
-    gameRule: GameRule
+    gameRuleData: GameRuleData
     finishGame: () => void
 }
 
-const Game = ({ gameRule, finishGame }: GameProps) => {
+const Game = ({ gameRuleData, finishGame }: GameProps) => {
     return (
-        <ProvideGame gameRule={gameRule} finishGame={finishGame}>
+        <ProvideGame gameRuleData={gameRuleData} finishGame={finishGame}>
             <GameReady />
         </ProvideGame>
     )
 }
 
 const GameReady = () => {
-    const spacing = useSpacing()
-
-    const { players, setPlayers } = useGame()
-
-    useEffect(() => {
-        const newPlayers = getPlayers()
-        setPlayers(newPlayers)
-    }, [])
-
-    const getPlayers = () => {
-        const players: GamePlayer[] = [
-            {
-                position: 0,
-                name: 'Joueur 1',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_1',
-            },
-            {
-                position: 1,
-                name: 'Joueur 2',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_2',
-            },
-            {
-                position: 2,
-                name: 'Joueur 3',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_3',
-            },
-            {
-                position: 3,
-                name: 'Joueur 4',
-                cards: [],
-                deckCardsWon: [],
-                id: 'player_4',
-            },
-        ]
-
-        CardHelper.distributeCards(players)
-
-        console.log('Players with cards : ', players)
-
-        return players
-    }
+    const { players, gameRuleData } = useGame()
 
     const sortedPlayers = useMemo(() => {
         return players.sort((playerA, playerB) => playerA.position - playerB.position)
     }, [players])
 
     return (
-        <div style={{ padding: spacing }}>
+        <div>
+            <h4>Règle en cours : {gameRuleData.label}</h4>
             <div style={{ display: 'flex' }}>
                 {sortedPlayers.map((player) => {
                     return (

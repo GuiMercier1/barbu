@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import Spacer from '../../components/Spacer'
 import { GamePlayer } from '../../model'
-import DeckCardsWon from './DeckCardsWon'
+import DeckCardsWonElement from './DeckCardsWonElement'
 import PlayerCard from './PlayerCard'
 
 type PlayerCardsProps = {
@@ -25,7 +25,7 @@ const PlayerCards = ({ player }: PlayerCardsProps) => {
             <div>
                 <span>Cartes gagnées :</span>
                 <Spacer half />
-                <DeckCardsWon player={player} />
+                <DeckCardsWonElement player={player} />
             </div>
         </div>
     )

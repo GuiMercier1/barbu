@@ -18,11 +18,17 @@ export type DeckCard = {
     first: boolean
 }
 
+export type DeckCardsWon = {
+    order: number
+    isLast: boolean
+    deckCards: DeckCard[]
+}
+
 export type GamePlayer = {
     position: number
     name: string
     cards: Card[]
-    deckCardsWon: DeckCard[][]
+    deckCardsWon: DeckCardsWon[]
     id: string
 }
 
@@ -36,4 +42,12 @@ export enum GameRule {
     DERNIER_PLI = 6,
     REUSSITE = 7,
     SALADE = 8,
+}
+
+export type GameRuleData = {
+    label: string
+    position: number
+    gameRule: GameRule
+    checkGameFinished: (gamePlayers: GamePlayer[]) => boolean
+    countPoints: (gamePlayer: GamePlayer) => number
 }

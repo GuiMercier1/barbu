@@ -68,7 +68,7 @@ const sortCards = (cards: Card[]): Card[] => {
     return [...clubsCards, ...heartCards, ...sparesCards, ...diamondsCards]
 }
 
-const distributeCards = (players: GamePlayer[]): void => {
+const distributeCards = (players: GamePlayer[]): number => {
     const cards = CardHelper.getCards(players.length)
 
     const shuffledCards = cards.sort((a, b) => 0.5 - Math.random())
@@ -83,6 +83,8 @@ const distributeCards = (players: GamePlayer[]): void => {
 
         player.cards = cardsSorted
     })
+
+    return amountOfCards
 }
 
 const getCardCssColor = (cardColor: CardColor): string => {
