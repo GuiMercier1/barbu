@@ -156,14 +156,12 @@ const _isSansDameFinished = (gamePlayers: GamePlayer[]): boolean => {
 const _isSansCoeurFinished = (gamePlayers: GamePlayer[]): boolean => {
     let playersHaveStillHearts = false
 
-    console.log('_isSansCoeurFinished')
     gamePlayers.forEach((player) => {
         player.cards.forEach((card) => {
             if (card.color === CardColor.COEUR) playersHaveStillHearts = true
         })
     })
 
-    console.log('_isSansCoeurFinished : ', !playersHaveStillHearts)
     return !playersHaveStillHearts
 }
 

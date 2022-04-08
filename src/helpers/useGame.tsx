@@ -76,10 +76,6 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
                 (basePlayer.globalPosition + (basePlayers.length - firstPlayerToPlay.globalPosition)) %
                 basePlayers.length
 
-            console.log('Dealer ID : ', dealerID)
-            console.log('Base Player : ', basePlayer)
-            console.log('New position : ', newPosition)
-
             return {
                 id: basePlayer.id,
                 name: basePlayer.name,

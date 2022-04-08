@@ -9,7 +9,7 @@ type PlayerCardProps = {
 }
 
 const PlayerCard = ({ player, card, isMyTurn }: PlayerCardProps) => {
-    const { playCard, players, playerIndex, deckCards } = useGame()
+    const { playCard, deckCards } = useGame()
 
     const borderColor = CardHelper.getCardCssColor(card.color)
     const fullLabel = CardHelper.getCardFullLabel(card)

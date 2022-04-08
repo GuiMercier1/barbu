@@ -10,20 +10,15 @@ type PlayerCardsProps = {
 }
 
 const PlayerCards = ({ player }: PlayerCardsProps) => {
-    const { gameStatus, playerIndex, dealerID, winningDeckCard, deckCards, players } = useGame()
+    const { gameStatus, playerIndex, dealerID, deckCards, players } = useGame()
 
     const isMyTurn = useMemo((): boolean => {
         // No player
         if (gameStatus === 'finished') return false
         // Every players has played
         if (deckCards.length === players.length) return false
-        else {
-            console.log('Player index compared to position : ', playerIndex, player)
-            return playerIndex === player.position
-        }
-    }, [gameStatus, deckCards, players, winningDeckCard, playerIndex, player])
-
-    console.log('Is my turn : ', isMyTurn, player)
+        else return playerIndex === player.position
+    }, [gameStatus, deckCards, players, playerIndex, player])
 
     return (
         <div>
