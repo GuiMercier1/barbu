@@ -18,6 +18,7 @@ type GameContext = {
     gameStatus: GameStatus
     finishGame: (gamePlayers: GamePlayer[]) => void
     dealerID: string
+    checkIsMyTurn: (gamePlayer: GamePlayer) => boolean
 }
 
 const GameContext = createContext<GameContext>(null as unknown as GameContext)
@@ -125,6 +126,14 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
         setNext()
     }
 
+    const checkIsMyTurn = (player: GamePlayer) => {
+        // No player
+        if (gameStatus === 'finished') return false
+        // Every players has played
+        if (deckCards.length === players.length) return false
+        else return playerIndex === player.position
+    }
+
     const setNext = () => {
         setPlayerIndex((oldIndex) => {
             const newIndex = oldIndex + 1
@@ -225,6 +234,7 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
         gameStatus,
         finishGame,
         dealerID,
+        checkIsMyTurn,
     }
 }
 

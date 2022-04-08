@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import Spacer from '../../components/Spacer'
 import CardHelper from '../../helpers/CardHelper'
 import { DeckCardsWon, GamePlayer } from '../../model'
 
@@ -9,6 +10,10 @@ type DeckCardsWonProps = {
 const DeckCardsWonElement = ({ player }: DeckCardsWonProps) => {
     return (
         <div>
+            <span>{player.name}</span>
+            <Spacer half />
+            <span>Cartes gagnées ({player.gamePoints} points)</span>
+            <Spacer half />
             {player.deckCardsWon.map((deckCardsWon, index) => {
                 return (
                     <Fragment key={index}>

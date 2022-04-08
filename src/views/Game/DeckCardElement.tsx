@@ -1,3 +1,4 @@
+import Spacer from '../../components/Spacer'
 import CardHelper from '../../helpers/CardHelper'
 import useGame from '../../helpers/useGame'
 import { DeckCard } from '../../model'
@@ -15,8 +16,12 @@ const DeckCardElement = ({ deckCard }: DeckCardElementProps) => {
     const isWinningDeckCard = winningDeckCard === null ? false : deckCard.card.id === winningDeckCard.card.id
 
     return (
-        <div style={{ borderColor, borderStyle: 'solid', padding: 4 }}>
-            <span style={{ fontWeight: isWinningDeckCard ? 'bold' : 'unset' }}>{fullLabel}</span>
+        <div>
+            <span>{deckCard.playedBy.name}</span>
+            <Spacer half />
+            <div style={{ borderColor, borderStyle: 'solid', padding: 4 }}>
+                <span style={{ fontWeight: isWinningDeckCard ? 'bold' : 'unset' }}>{fullLabel}</span>
+            </div>
         </div>
     )
 }

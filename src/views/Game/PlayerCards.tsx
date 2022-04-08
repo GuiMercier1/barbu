@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo } from 'react'
+import { Fragment } from 'react'
 import Spacer from '../../components/Spacer'
 import useGame from '../../helpers/useGame'
 import { GamePlayer } from '../../model'
@@ -10,15 +10,9 @@ type PlayerCardsProps = {
 }
 
 const PlayerCards = ({ player }: PlayerCardsProps) => {
-    const { gameStatus, playerIndex, dealerID, deckCards, players } = useGame()
+    const { gameStatus, dealerID, checkIsMyTurn } = useGame()
 
-    const isMyTurn = useMemo((): boolean => {
-        // No player
-        if (gameStatus === 'finished') return false
-        // Every players has played
-        if (deckCards.length === players.length) return false
-        else return playerIndex === player.position
-    }, [gameStatus, deckCards, players, playerIndex, player])
+    const isMyTurn = checkIsMyTurn(player)
 
     return (
         <div>
@@ -36,12 +30,6 @@ const PlayerCards = ({ player }: PlayerCardsProps) => {
                     ))}
                 </Fragment>
             )}
-            <Spacer />
-            <div>
-                <span>Cartes gagnées ({player.gamePoints} points)</span>
-                <Spacer half />
-                <DeckCardsWonElement player={player} />
-            </div>
         </div>
     )
 }

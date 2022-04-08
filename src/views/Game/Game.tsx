@@ -3,6 +3,7 @@ import Spacer from '../../components/Spacer'
 import useGame, { ProvideGame } from '../../helpers/useGame'
 import { GamePlayer, GameRuleData, Player } from '../../model'
 import Deck from './Deck'
+import DeckCardsWonElement from './DeckCardsWonElement'
 import PlayerCards from './PlayerCards'
 
 type GameProps = {
@@ -21,7 +22,7 @@ const Game = ({ players, dealerID, gameRuleData, finishGame }: GameProps) => {
 }
 
 const GameReady = () => {
-    const { players, gameRuleData, gameStatus, finishGame } = useGame()
+    const { players, gameRuleData, gameStatus, finishGame, checkIsMyTurn } = useGame()
 
     const sortedPlayers = useMemo(() => {
         return players.sort((playerA, playerB) => playerA.globalPosition - playerB.globalPosition)
@@ -47,16 +48,26 @@ const GameReady = () => {
             )}
             <div style={{ display: 'flex' }}>
                 {sortedPlayers.map((player) => {
-                    return (
+                    const isMyTurn = checkIsMyTurn(player)
+                    return isMyTurn ? (
                         <Fragment key={player.id}>
                             <PlayerCards player={player} />
                             <Spacer />
                         </Fragment>
-                    )
+                    ) : null
                 })}
             </div>
             <Spacer />
             <Deck />
+            <Spacer />
+            <div style={{ display: 'flex' }}>
+                {players.map((player) => (
+                    <Fragment>
+                        <DeckCardsWonElement player={player} />
+                        <Spacer half />
+                    </Fragment>
+                ))}
+            </div>
         </div>
     )
 }
