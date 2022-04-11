@@ -1,10 +1,13 @@
 import { Fragment } from 'react'
 import Spacer from '../../components/Spacer'
 import useGame from '../../helpers/useGame'
+import { useTurn } from '../../helpers/useTurn'
 import DeckCardElement from './DeckCardElement'
 
 const Deck = () => {
-    const { deckCards, players, finishTurn } = useGame()
+    const { players } = useGame()
+
+    const { deckCards, finishTurn } = useTurn()
 
     return (
         <Fragment>

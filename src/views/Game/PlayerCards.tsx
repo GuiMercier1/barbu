@@ -1,8 +1,8 @@
 import { Fragment } from 'react'
 import Spacer from '../../components/Spacer'
 import useGame from '../../helpers/useGame'
+import { useTurn } from '../../helpers/useTurn'
 import { GamePlayer } from '../../model'
-import DeckCardsWonElement from './DeckCardsWonElement'
 import PlayerCard from './PlayerCard'
 
 type PlayerCardsProps = {
@@ -10,7 +10,8 @@ type PlayerCardsProps = {
 }
 
 const PlayerCards = ({ player }: PlayerCardsProps) => {
-    const { gameStatus, dealerID, checkIsMyTurn } = useGame()
+    const { gameStatus, dealerID } = useGame()
+    const { checkIsMyTurn } = useTurn()
 
     const isMyTurn = checkIsMyTurn(player)
 

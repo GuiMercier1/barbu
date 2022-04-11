@@ -1,6 +1,7 @@
 import { Fragment, useMemo } from 'react'
 import Spacer from '../../components/Spacer'
 import useGame, { ProvideGame } from '../../helpers/useGame'
+import { ProvideTurn } from '../../helpers/useTurn'
 import { GamePlayer, GameRuleData, Player } from '../../model'
 import Deck from './Deck'
 import DeckCardsWonElement from './DeckCardsWonElement'
@@ -16,13 +17,15 @@ type GameProps = {
 const Game = ({ players, dealerID, gameRuleData, finishGame }: GameProps) => {
     return (
         <ProvideGame basePlayers={players} dealerID={dealerID} gameRuleData={gameRuleData} finishGame={finishGame}>
-            <GameReady />
+            <ProvideTurn>
+                <GameReady />
+            </ProvideTurn>
         </ProvideGame>
     )
 }
 
 const GameReady = () => {
-    const { players, gameRuleData, gameStatus, finishGame, checkIsMyTurn } = useGame()
+    const { players, gameRuleData, gameStatus, finishGame, turnIndex } = useGame()
 
     const sortedPlayers = useMemo(() => {
         return players.sort((playerA, playerB) => playerA.globalPosition - playerB.globalPosition)
@@ -48,13 +51,19 @@ const GameReady = () => {
             )}
             <div style={{ display: 'flex' }}>
                 {sortedPlayers.map((player) => {
-                    const isMyTurn = checkIsMyTurn(player)
-                    return isMyTurn ? (
+                    // const isMyTurn = checkIsMyTurn(player)
+                    // return isMyTurn ? (
+                    //     <Fragment key={player.id}>
+                    //         <PlayerCards player={player} />
+                    //         <Spacer />
+                    //     </Fragment>
+                    // ) : null
+                    return (
                         <Fragment key={player.id}>
                             <PlayerCards player={player} />
                             <Spacer />
                         </Fragment>
-                    ) : null
+                    )
                 })}
             </div>
             <Spacer />
@@ -62,7 +71,7 @@ const GameReady = () => {
             <Spacer />
             <div style={{ display: 'flex' }}>
                 {players.map((player) => (
-                    <Fragment>
+                    <Fragment key={player.id}>
                         <DeckCardsWonElement player={player} />
                         <Spacer half />
                     </Fragment>

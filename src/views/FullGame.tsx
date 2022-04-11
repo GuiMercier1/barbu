@@ -14,24 +14,28 @@ const FullGame = () => {
             name: 'Joueur 1',
             games: [],
             globalPosition: 0,
+            isNPC: false,
         },
         {
             id: 'player_2',
             name: 'Joueur 2',
             games: [],
             globalPosition: 1,
+            isNPC: true,
         },
         {
             id: 'player_3',
             name: 'Joueur 3',
             games: [],
             globalPosition: 2,
+            isNPC: true,
         },
         {
             id: 'player_4',
             name: 'Joueur 4',
             games: [],
             globalPosition: 3,
+            isNPC: true,
         },
     ]
 

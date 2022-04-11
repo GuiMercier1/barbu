@@ -7,18 +7,13 @@ type GameStatus = 'running' | 'finished'
 type GameContext = {
     players: GamePlayer[]
     setPlayers: React.Dispatch<React.SetStateAction<GamePlayer[]>>
-    playerIndex: number
-    setPlayerIndex: React.Dispatch<React.SetStateAction<number>>
-    deckCards: DeckCard[]
-    setDeckCards: React.Dispatch<React.SetStateAction<DeckCard[]>>
-    playCard: (player: GamePlayer, card: Card) => void
-    finishTurn: () => void
-    winningDeckCard: DeckCard | null
     gameRuleData: GameRuleData
     gameStatus: GameStatus
     finishGame: (gamePlayers: GamePlayer[]) => void
     dealerID: string
-    checkIsMyTurn: (gamePlayer: GamePlayer) => boolean
+    withdrawCard: (player: GamePlayer, card: Card) => void
+    manageEndOfTurn: (winningDeckCard: DeckCard, deckCards: DeckCard[]) => void
+    turnIndex: number
 }
 
 const GameContext = createContext<GameContext>(null as unknown as GameContext)
@@ -51,16 +46,9 @@ type UseProvideGameProps = {
 const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: UseProvideGameProps): GameContext => {
     const amountOfTurns = useRef<number>(0)
 
-    const [players, setPlayers] = useState<GamePlayer[]>([])
-    const [playerIndex, setPlayerIndex] = useState<number>(0)
-    const [deckCards, setDeckCards] = useState<DeckCard[]>([])
+    const [players, setPlayers] = useState<GamePlayer[]>(getPlayers())
     const [turnIndex, setTurnIndex] = useState<number>(0)
     const [gameStatus, setGameStatus] = useState<GameStatus>('running')
-    const [lastWinnerID, setLastWinnerID] = useState<string | null>()
-
-    useEffect(() => {
-        setPlayers(getPlayers())
-    }, [])
 
     const isLastTurn = turnIndex + 1 === amountOfTurns.current
 
@@ -85,6 +73,7 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
                 gamePoints: 0,
                 globalPosition: basePlayer.globalPosition,
                 position: newPosition,
+                isNPC: basePlayer.isNPC,
             }
         })
 
@@ -93,18 +82,7 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
         return players
     }
 
-    const playCard = (player: GamePlayer, card: Card) => {
-        setDeckCards((oldDeckCards) => {
-            const isFirst = oldDeckCards.length === 0
-            const newDeckCard: DeckCard = {
-                playedBy: player,
-                card,
-                first: isFirst,
-            }
-
-            return [...oldDeckCards, newDeckCard]
-        })
-
+    const withdrawCard = (player: GamePlayer, card: Card) => {
         setPlayers((oldPlayers) => {
             const currentPlayer = oldPlayers.find((oldPlayer) => oldPlayer.id === player.id)
 
@@ -122,53 +100,9 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
                 },
             ]
         })
-
-        setNext()
     }
 
-    const checkIsMyTurn = (player: GamePlayer) => {
-        // No player
-        if (gameStatus === 'finished') return false
-        // Every players has played
-        if (deckCards.length === players.length) return false
-        else return playerIndex === player.position
-    }
-
-    const setNext = () => {
-        setPlayerIndex((oldIndex) => {
-            const newIndex = oldIndex + 1
-            if (newIndex >= players.length) return 0
-            else return newIndex
-        })
-    }
-
-    const getWinningDeckCard = (): DeckCard | null => {
-        if (deckCards.length === 0) return null
-
-        const firstDeckCard = deckCards.find((deckCard) => deckCard.first)
-
-        if (!firstDeckCard) {
-            throw 'getWinningDeckCard - No first deck card'
-        }
-
-        const mainColor = firstDeckCard.card.color
-
-        const filteredDeckCards = deckCards.filter((deckCard) => deckCard.card.color === mainColor)
-
-        // We reverst sorting
-        const sortedDeckCards = filteredDeckCards.sort(
-            (deckCardA, deckCardB) => deckCardB.card.value - deckCardA.card.value
-        )
-
-        return sortedDeckCards[0]
-    }
-
-    const finishTurn = () => {
-        if (!winningDeckCard) {
-            alert('Impossible de finir le tour maintenant !')
-            return
-        }
-
+    const manageEndOfTurn = (winningDeckCard: DeckCard, deckCards: DeckCard[]) => {
         setPlayers((oldPlayers) => {
             const winner = oldPlayers.find((player) => player.position === winningDeckCard.playedBy.position)
 
@@ -208,7 +142,6 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
         })
 
         setTurnIndex((oldIndex) => oldIndex + 1)
-        setDeckCards([])
     }
 
     useEffect(() => {
@@ -217,24 +150,16 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
         if (gameRuleData.checkGameFinished(players)) setGameStatus('finished')
     }, [turnIndex])
 
-    // Careful, winning deck card does not wait the end of the turn !
-    const winningDeckCard: DeckCard | null = useMemo(getWinningDeckCard, [deckCards])
-
     return {
         players,
         setPlayers,
-        playerIndex,
-        setPlayerIndex,
-        deckCards,
-        setDeckCards,
-        playCard,
-        finishTurn,
-        winningDeckCard,
         gameRuleData,
         gameStatus,
         finishGame,
         dealerID,
-        checkIsMyTurn,
+        withdrawCard,
+        manageEndOfTurn,
+        turnIndex,
     }
 }
 

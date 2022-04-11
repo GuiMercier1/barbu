@@ -34,6 +34,7 @@ export type Player = {
     name: string
     games: PlayerGameData[]
     globalPosition: number
+    isNPC: boolean
 }
 
 export type GamePlayer = {
@@ -44,6 +45,7 @@ export type GamePlayer = {
     gamePoints: number
     globalPosition: number
     position: number
+    isNPC: boolean
 }
 
 export enum GameRule {

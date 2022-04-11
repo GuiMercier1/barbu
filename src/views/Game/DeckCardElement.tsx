@@ -1,6 +1,6 @@
 import Spacer from '../../components/Spacer'
 import CardHelper from '../../helpers/CardHelper'
-import useGame from '../../helpers/useGame'
+import { useTurn } from '../../helpers/useTurn'
 import { DeckCard } from '../../model'
 
 type DeckCardElementProps = {
@@ -8,7 +8,7 @@ type DeckCardElementProps = {
 }
 
 const DeckCardElement = ({ deckCard }: DeckCardElementProps) => {
-    const { winningDeckCard } = useGame()
+    const { winningDeckCard } = useTurn()
 
     const borderColor = CardHelper.getCardCssColor(deckCard.card.color)
     const fullLabel = CardHelper.getCardFullLabel(deckCard.card)
