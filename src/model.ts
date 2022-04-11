@@ -1,4 +1,4 @@
-import { RobotPickACardProps } from './helpers/RobotHelper'
+import { RobotPickACardProps } from './helpers/robot/RobotHelper'
 
 export enum CardColor {
     TREFLE = 'trefle',

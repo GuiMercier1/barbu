@@ -1,7 +1,7 @@
 import { createContext, ReactElement, useContext, useEffect, useMemo, useState } from 'react'
 import { Card, DeckCard, GamePlayer } from '../model'
 import CardHelper from './CardHelper'
-import RobotHelper from './RobotHelper'
+import RobotHelper from './robot/RobotHelper'
 import useGame from './useGame'
 
 type TurnStatus = 'running' | 'finished'

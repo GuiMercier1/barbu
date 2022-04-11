@@ -1,5 +1,6 @@
-import { Card, DeckCard, GamePlayer, GameRuleData } from '../model'
-import CardHelper from './CardHelper'
+import { Card, DeckCard, GamePlayer, GameRuleData } from '../../model'
+import CardHelper from '../CardHelper'
+import SansBarbuRobotHelper from './SansBarbuRobotHelper'
 
 export type RobotPickACardProps = {
     gamePlayer: GamePlayer
@@ -7,19 +8,7 @@ export type RobotPickACardProps = {
     difficulty: 0 | 1 //
 }
 
-const _robotPickACard_sansbarbu = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
-    const playableCards = getPlayableCards(gamePlayer, deckCards)
-
-    console.log('Playable cards : ', playableCards)
-
-    if (difficulty === 0) {
-        return playRandom(playableCards)
-    }
-
-    return playableCards[0]
-}
-
-const _robotPickACard_sansroi = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_sansroi = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -29,7 +18,7 @@ const _robotPickACard_sansroi = ({ gamePlayer, deckCards, difficulty }: RobotPic
     return playableCards[0]
 }
 
-const _robotPickACard_sansdame = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_sansdame = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -39,7 +28,7 @@ const _robotPickACard_sansdame = ({ gamePlayer, deckCards, difficulty }: RobotPi
     return playableCards[0]
 }
 
-const _robotPickACard_sanscoeur = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_sanscoeur = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -49,7 +38,7 @@ const _robotPickACard_sanscoeur = ({ gamePlayer, deckCards, difficulty }: RobotP
     return playableCards[0]
 }
 
-const _robotPickACard_moinsdepli = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_moinsdepli = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -59,7 +48,7 @@ const _robotPickACard_moinsdepli = ({ gamePlayer, deckCards, difficulty }: Robot
     return playableCards[0]
 }
 
-const _robotPickACard_plusdepli = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_plusdepli = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -69,7 +58,7 @@ const _robotPickACard_plusdepli = ({ gamePlayer, deckCards, difficulty }: RobotP
     return playableCards[0]
 }
 
-const _robotPickACard_dernierpli = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_dernierpli = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -79,7 +68,7 @@ const _robotPickACard_dernierpli = ({ gamePlayer, deckCards, difficulty }: Robot
     return playableCards[0]
 }
 
-const _robotPickACard_salade = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
+const robotPickACard_salade = ({ gamePlayer, deckCards, difficulty }: RobotPickACardProps): Card => {
     const playableCards = getPlayableCards(gamePlayer, deckCards)
 
     if (difficulty === 0) {
@@ -98,14 +87,16 @@ const playRandom = (playableCards: Card[]) => {
 }
 
 const RobotHelper = {
-    _robotPickACard_sansbarbu,
-    _robotPickACard_sansroi,
-    _robotPickACard_sansdame,
-    _robotPickACard_sanscoeur,
-    _robotPickACard_moinsdepli,
-    _robotPickACard_plusdepli,
-    _robotPickACard_dernierpli,
-    _robotPickACard_salade,
+    robotPickACard_sansbarbu: SansBarbuRobotHelper.pickACard,
+    robotPickACard_sansroi,
+    robotPickACard_sansdame,
+    robotPickACard_sanscoeur,
+    robotPickACard_moinsdepli,
+    robotPickACard_plusdepli,
+    robotPickACard_dernierpli,
+    robotPickACard_salade,
+    getPlayableCards,
+    playRandom,
 }
 
 export default RobotHelper
