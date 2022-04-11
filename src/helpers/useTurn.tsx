@@ -135,7 +135,7 @@ const useProvideTurn = (): TurnContext => {
         }
 
         if (currentPlayer.isNPC) {
-            // setTimeout(() => _ai_playACard(currentPlayer), 2000)
+            setTimeout(() => _ai_playACard(currentPlayer), 2000)
         }
     }, [playerPosition])
 
