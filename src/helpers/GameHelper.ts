@@ -1,4 +1,5 @@
 import { CardColor, CountPointsFunction, DeckCardsWon, GamePlayer, GameRule, GameRuleData } from '../model'
+import RobotHelper from './RobotHelper'
 
 const POINTS_FOR_BARBU = 30
 const POINTS_FOR_KING = 20
@@ -215,6 +216,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isSansBarbuFinished,
         countPoints: _countPointsSansBarbu,
         position: 0,
+        robotPickACard: RobotHelper._robotPickACard_sansbarbu,
     },
     {
         gameRule: GameRule.SANS_ROI,
@@ -222,6 +224,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isSansRoiFinished,
         countPoints: _countPointsSansRoi,
         position: 1,
+        robotPickACard: RobotHelper._robotPickACard_sansroi,
     },
     {
         gameRule: GameRule.SANS_DAME,
@@ -229,6 +232,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isSansDameFinished,
         countPoints: _countPointsSansDame,
         position: 2,
+        robotPickACard: RobotHelper._robotPickACard_sansdame,
     },
     {
         gameRule: GameRule.SANS_COEUR,
@@ -236,6 +240,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isSansCoeurFinished,
         countPoints: _countPointsSansCoeur,
         position: 3,
+        robotPickACard: RobotHelper._robotPickACard_sanscoeur,
     },
     {
         gameRule: GameRule.MOINS_DE_PLI,
@@ -243,6 +248,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isMoinsDePliFinished,
         countPoints: _countPointsMoinsDePli,
         position: 4,
+        robotPickACard: RobotHelper._robotPickACard_moinsdepli,
     },
     {
         gameRule: GameRule.PLUS_DE_PLI,
@@ -250,6 +256,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isPlusDePliFinished,
         countPoints: _countPointsPlusDePli,
         position: 5,
+        robotPickACard: RobotHelper._robotPickACard_plusdepli,
     },
     {
         gameRule: GameRule.DERNIER_PLI,
@@ -257,6 +264,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isDernierPliFinished,
         countPoints: _countPointsDernierPli,
         position: 6,
+        robotPickACard: RobotHelper._robotPickACard_dernierpli,
     },
     {
         gameRule: GameRule.SALADE,
@@ -264,6 +272,7 @@ const allGamesRules: GameRuleData[] = [
         checkGameFinished: _isSaladeFinished,
         countPoints: _countPointsSalade,
         position: 7,
+        robotPickACard: RobotHelper._robotPickACard_salade,
     },
 ]
 

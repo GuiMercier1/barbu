@@ -51,14 +51,7 @@ const GameReady = () => {
             )}
             <div style={{ display: 'flex' }}>
                 {sortedPlayers.map((player) => {
-                    // const isMyTurn = checkIsMyTurn(player)
-                    // return isMyTurn ? (
-                    //     <Fragment key={player.id}>
-                    //         <PlayerCards player={player} />
-                    //         <Spacer />
-                    //     </Fragment>
-                    // ) : null
-                    return (
+                    return player.isNPC ? null : (
                         <Fragment key={player.id}>
                             <PlayerCards player={player} />
                             <Spacer />

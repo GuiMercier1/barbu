@@ -1,4 +1,4 @@
-import { Card, CardColor, GamePlayer } from '../model'
+import { Card, CardColor, DeckCard, GamePlayer } from '../model'
 
 const getCardLabel = (value: number): string => {
     return value <= 10 ? '' + value : value === 11 ? 'Valet' : value === 12 ? 'Dame' : value === 13 ? 'Roi' : 'As'
@@ -94,11 +94,23 @@ const getCardFullLabel = (card: Card): string => {
     return card.label + ' de ' + card.color
 }
 
+const canPlayCard = (card: Card, playerCards: Card[], deckCards: DeckCard[]) => {
+    if (deckCards.length === 0) return true
+
+    const mainCardColor = deckCards[0].card.color
+    const sameColorCards = playerCards.filter((card) => card.color === mainCardColor)
+    const mustPlaySameColor = sameColorCards.length > 0
+
+    if (mustPlaySameColor) return card.color === mainCardColor
+    else return true
+}
+
 const CardHelper = {
     getCards,
     distributeCards,
     getCardCssColor,
     getCardFullLabel,
+    canPlayCard,
 }
 
 export default CardHelper

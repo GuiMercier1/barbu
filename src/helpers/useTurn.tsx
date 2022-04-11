@@ -1,5 +1,7 @@
 import { createContext, ReactElement, useContext, useEffect, useMemo, useState } from 'react'
 import { Card, DeckCard, GamePlayer } from '../model'
+import CardHelper from './CardHelper'
+import RobotHelper from './RobotHelper'
 import useGame from './useGame'
 
 type TurnStatus = 'running' | 'finished'
@@ -31,7 +33,7 @@ export const useTurn = () => {
 }
 
 const useProvideTurn = (): TurnContext => {
-    const { withdrawCard, manageEndOfTurn, players } = useGame()
+    const { withdrawCard, manageEndOfTurn, players, gameRuleData, gameStatus } = useGame()
 
     const [deckCards, setDeckCards] = useState<DeckCard[]>([])
 
@@ -63,15 +65,8 @@ const useProvideTurn = (): TurnContext => {
     }
 
     // Defines if the player can play this card according to existing deck card
-    const canPlayCard = (gameplayer: GamePlayer, card: Card) => {
-        if (deckCards.length === 0) return true
-
-        const mainCardColor = deckCards[0].card.color
-        const sameColorCards = gameplayer.cards.filter((card) => card.color === mainCardColor)
-        const mustPlaySameColor = sameColorCards.length > 0
-
-        if (mustPlaySameColor) return card.color === mainCardColor
-        else return true
+    const canPlayCard = (gamePlayer: GamePlayer, card: Card) => {
+        return CardHelper.canPlayCard(card, gamePlayer.cards, deckCards)
     }
 
     const checkIsMyTurn = (player: GamePlayer) => {
@@ -117,11 +112,12 @@ const useProvideTurn = (): TurnContext => {
             return canPlayCard(gamePlayer, card)
         })
 
-        playCard(gamePlayer, playableCards[0])
+        const cardToPlay = gameRuleData.robotPickACard({ gamePlayer, deckCards, difficulty: 0 })
+        playCard(gamePlayer, cardToPlay)
     }
 
     useEffect(() => {
-        if (turnStatus === 'finished') return
+        if (turnStatus === 'finished' || gameStatus === 'finished') return
 
         const currentPlayer = players.find((player) => player.position === playerPosition)
 
@@ -135,7 +131,7 @@ const useProvideTurn = (): TurnContext => {
         }
 
         if (currentPlayer.isNPC) {
-            setTimeout(() => _ai_playACard(currentPlayer), 2000)
+            setTimeout(() => _ai_playACard(currentPlayer), 500)
         }
     }, [playerPosition])
 

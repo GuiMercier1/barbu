@@ -1,3 +1,5 @@
+import { RobotPickACardProps } from './helpers/RobotHelper'
+
 export enum CardColor {
     TREFLE = 'trefle',
     PIQUE = 'pique',
@@ -68,4 +70,5 @@ export type GameRuleData = {
     gameRule: GameRule
     checkGameFinished: (gamePlayers: GamePlayer[]) => boolean
     countPoints: CountPointsFunction
+    robotPickACard: (props: RobotPickACardProps) => Card
 }

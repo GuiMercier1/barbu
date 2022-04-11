@@ -1,5 +1,4 @@
 import CardHelper from '../../helpers/CardHelper'
-import useGame from '../../helpers/useGame'
 import { useTurn } from '../../helpers/useTurn'
 import { Card, GamePlayer } from '../../model'
 
