@@ -51,12 +51,18 @@ const GameReady = () => {
             )}
             <div style={{ display: 'flex' }}>
                 {sortedPlayers.map((player) => {
-                    return player.isNPC ? null : (
+                    return (
                         <Fragment key={player.id}>
                             <PlayerCards player={player} />
                             <Spacer />
                         </Fragment>
                     )
+                    // return player.isNPC ? null : (
+                    //     <Fragment key={player.id}>
+                    //         <PlayerCards player={player} />
+                    //         <Spacer />
+                    //     </Fragment>
+                    // )
                 })}
             </div>
             <Spacer />

@@ -108,11 +108,8 @@ const useProvideTurn = (): TurnContext => {
     }
 
     const _ai_playACard = (gamePlayer: GamePlayer) => {
-        const playableCards = gamePlayer.cards.filter((card) => {
-            return canPlayCard(gamePlayer, card)
-        })
+        const cardToPlay = gameRuleData.robotPickACard({ gamePlayer, gamePlayers: players, deckCards, difficulty: 1 })
 
-        const cardToPlay = gameRuleData.robotPickACard({ gamePlayer, deckCards, difficulty: 0 })
         playCard(gamePlayer, cardToPlay)
     }
 

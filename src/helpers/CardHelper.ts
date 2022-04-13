@@ -68,6 +68,10 @@ const sortCards = (cards: Card[]): Card[] => {
     return [...clubsCards, ...heartCards, ...sparesCards, ...diamondsCards]
 }
 
+const getAmountOfCardsForEachPlayer = (playersLength: number) => {
+    return playersLength === 4 ? 13 : 16
+}
+
 const distributeCards = (players: GamePlayer[]): number => {
     const cards = CardHelper.getCards(players.length)
 
@@ -77,7 +81,7 @@ const distributeCards = (players: GamePlayer[]): number => {
 
     players.forEach((player, index) => {
         const startIndex = index * amountOfCards
-        const cardsSliced = cards.slice(startIndex, startIndex + amountOfCards)
+        const cardsSliced = shuffledCards.slice(startIndex, startIndex + amountOfCards)
         const cardsSorted = sortCards(cardsSliced)
 
         player.cards = cardsSorted
@@ -111,6 +115,7 @@ const CardHelper = {
     getCardCssColor,
     getCardFullLabel,
     canPlayCard,
+    getAmountOfCardsForEachPlayer,
 }
 
 export default CardHelper
