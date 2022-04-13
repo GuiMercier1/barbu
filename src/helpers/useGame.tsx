@@ -48,7 +48,13 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
 
     const [players, setPlayers] = useState<GamePlayer[]>(getPlayers())
     const [turnIndex, setTurnIndex] = useState<number>(0)
-    const [gameStatus, setGameStatus] = useState<GameStatus>('running')
+
+    const gameStatus: GameStatus = useMemo(() => {
+        if (turnIndex === 0) return 'running'
+
+        if (gameRuleData.checkGameFinished(players)) return 'finished'
+        else return 'running'
+    }, [turnIndex])
 
     const isLastTurn = turnIndex + 1 === amountOfTurns.current
 
@@ -143,12 +149,6 @@ const useProvideGame = ({ basePlayers, dealerID, gameRuleData, finishGame }: Use
 
         setTurnIndex((oldIndex) => oldIndex + 1)
     }
-
-    useEffect(() => {
-        if (turnIndex === 0) return
-
-        if (gameRuleData.checkGameFinished(players)) setGameStatus('finished')
-    }, [turnIndex])
 
     return {
         players,
