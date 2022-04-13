@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import CardHelper from '../../helpers/CardHelper'
 import { useTurn } from '../../helpers/useTurn'
 import { Card, GamePlayer } from '../../model'
@@ -6,13 +7,15 @@ type PlayerCardProps = {
     player: GamePlayer
     card: Card
     isMyTurn: boolean
+    cardHeight: number
 }
 
-const PlayerCard = ({ player, card, isMyTurn }: PlayerCardProps) => {
+const PlayerCard = ({ player, card, isMyTurn, cardHeight }: PlayerCardProps) => {
     const { playCard, canPlayCard } = useTurn()
 
-    const borderColor = CardHelper.getCardCssColor(card.color)
-    const fullLabel = CardHelper.getCardFullLabel(card)
+    const imageSrc = useMemo(() => {
+        return CardHelper.getCardAsset(card, player.isNPC)
+    }, [card])
 
     const checkCanPlay = (): boolean => {
         if (!isMyTurn) return false
@@ -21,12 +24,19 @@ const PlayerCard = ({ player, card, isMyTurn }: PlayerCardProps) => {
 
     const canPlay = checkCanPlay()
 
+    const onCardClick = () => {
+        if (!canPlay) {
+            alert('Impossible de jouer cette carte !')
+        } else playCard(player, card)
+    }
+
     return (
-        <div>
-            <button style={{ borderColor }} onClick={() => playCard(player, card)} disabled={!canPlay}>
-                {fullLabel}
-            </button>
-        </div>
+        <img
+            src={imageSrc}
+            height={cardHeight}
+            style={{ boxShadow: '1px 1px 1px 1px lightgrey' }}
+            onClick={onCardClick}
+        />
     )
 }
 

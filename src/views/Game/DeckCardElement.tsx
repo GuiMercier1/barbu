@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import Spacer from '../../components/Spacer'
 import CardHelper from '../../helpers/CardHelper'
 import { useTurn } from '../../helpers/useTurn'
@@ -15,13 +16,15 @@ const DeckCardElement = ({ deckCard }: DeckCardElementProps) => {
 
     const isWinningDeckCard = winningDeckCard === null ? false : deckCard.card.id === winningDeckCard.card.id
 
+    const cardAsset = useMemo(() => {
+        return CardHelper.getCardAsset(deckCard.card, false)
+    }, [deckCard])
+
     return (
         <div>
             <span>{deckCard.playedBy.name}</span>
             <Spacer half />
-            <div style={{ borderColor, borderStyle: 'solid', padding: 4 }}>
-                <span style={{ fontWeight: isWinningDeckCard ? 'bold' : 'unset' }}>{fullLabel}</span>
-            </div>
+            <img src={cardAsset} style={{ height: 142 }} />
         </div>
     )
 }

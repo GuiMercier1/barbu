@@ -15,6 +15,10 @@ const PlayerCards = ({ player }: PlayerCardsProps) => {
 
     const isMyTurn = checkIsMyTurn(player)
 
+    const cardWidth = 100
+    const cardHeight = 142
+    const cardGap = 20
+
     return (
         <div>
             <span>
@@ -23,12 +27,18 @@ const PlayerCards = ({ player }: PlayerCardsProps) => {
             {gameStatus === 'running' && (
                 <Fragment>
                     <Spacer />
-                    {player.cards.map((card) => (
-                        <Fragment key={card.id}>
-                            <PlayerCard player={player} card={card} isMyTurn={isMyTurn} />
-                            <Spacer quarter />
-                        </Fragment>
-                    ))}
+                    <div
+                        style={{
+                            position: 'relative',
+                            width: cardWidth + cardGap * player.cards.length,
+                            height: cardHeight,
+                        }}>
+                        {player.cards.map((card, index) => (
+                            <div style={{ position: 'absolute', height: cardHeight, left: cardGap * index }}>
+                                <PlayerCard player={player} card={card} isMyTurn={isMyTurn} cardHeight={cardHeight} />
+                            </div>
+                        ))}
+                    </div>
                 </Fragment>
             )}
         </div>
