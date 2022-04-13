@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import CardHelper from '../../helpers/CardHelper'
 import { useTurn } from '../../helpers/useTurn'
 import { Card, GamePlayer } from '../../model'
@@ -12,6 +12,8 @@ type PlayerCardProps = {
 
 const PlayerCard = ({ player, card, isMyTurn, cardHeight }: PlayerCardProps) => {
     const { playCard, canPlayCard } = useTurn()
+
+    const [hover, setHover] = useState<boolean>(false)
 
     const imageSrc = useMemo(() => {
         return CardHelper.getCardAsset(card, player.isNPC)
@@ -34,8 +36,15 @@ const PlayerCard = ({ player, card, isMyTurn, cardHeight }: PlayerCardProps) => 
         <img
             src={imageSrc}
             height={cardHeight}
-            style={{ boxShadow: '1px 1px 1px 1px lightgrey' }}
+            style={{
+                boxShadow: '3px 1px 1px 1px lightgrey',
+                cursor: player.isNPC ? undefined : 'pointer',
+                border: !player.isNPC && hover ? '2px solid black' : undefined,
+                zIndex: !player.isNPC && hover ? 100000 : undefined,
+            }}
             onClick={onCardClick}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
         />
     )
 }

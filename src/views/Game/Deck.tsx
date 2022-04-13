@@ -1,7 +1,9 @@
 import { Fragment } from 'react'
 import Spacer from '../../components/Spacer'
+import CardHelper from '../../helpers/CardHelper'
 import useGame from '../../helpers/useGame'
 import { useTurn } from '../../helpers/useTurn'
+import { Card, DeckCard, GamePlayer } from '../../model'
 import DeckCardElement from './DeckCardElement'
 
 const Deck = () => {
@@ -9,14 +11,20 @@ const Deck = () => {
 
     const { deckCards, finishTurn } = useTurn()
 
+    const getPlayerCard = (player: GamePlayer): DeckCard | undefined => {
+        return deckCards.find((deckCard) => deckCard.playedBy.id === player.id)
+    }
+
     return (
         <Fragment>
             <div style={{ display: 'flex' }}>
-                {deckCards.map((deckCard) => {
+                {players.map((player) => {
+                    const deckCard = getPlayerCard(player)
+
                     return (
-                        <Fragment key={deckCard.card.id}>
-                            <DeckCardElement deckCard={deckCard} />
-                            <Spacer half />
+                        <Fragment>
+                            <DeckCardElement player={player} deckCard={deckCard} />
+                            <Spacer />
                         </Fragment>
                     )
                 })}

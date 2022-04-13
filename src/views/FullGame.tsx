@@ -81,11 +81,6 @@ const FullGame = () => {
         <div style={{ padding: spacing, paddingTop: 0 }}>
             <h1>Le barbu !</h1>
             <Spacer half />
-            TODO
-            <ul>
-                <li>La personne qui gagne le dernier deck distribue</li>
-            </ul>
-            <Spacer half />
             <span>Total des points :</span>
             <ul>
                 {players.map((player) => (

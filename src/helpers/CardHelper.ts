@@ -325,6 +325,11 @@ const getCardAsset = (card: Card, playerIsNPC: boolean): string => {
     throw "Can't find the asset for card"
 }
 
+const sizes = {
+    height: 145.2,
+    width: 100,
+}
+
 const CardHelper = {
     getCards,
     distributeCards,
@@ -333,6 +338,7 @@ const CardHelper = {
     canPlayCard,
     getAmountOfCardsForEachPlayer,
     getCardAsset,
+    sizes,
 }
 
 export default CardHelper
