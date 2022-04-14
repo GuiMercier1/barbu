@@ -21,13 +21,8 @@ const pickACard = ({ gamePlayer, gamePlayers, deckCards, difficulty }: RobotPick
 
     // Si je joue en premier :
     if (deckCardsCaracs.isFirst) {
-        // - Si je n'ai pas le roi de cœur ni l'as de cœur, je lance à cœur
-        if (playableCC.amountOfCoeurs > 0 && !playableCC.hasRoiCoeur && !playableCC.hasAsCoeur) {
-            return RobotHelper.getColorHighestValue(playableCards, CardColor.COEUR)
-        }
-
-        // Sinon on tente la coupe
-        const cutCard = RobotHelper.playCutFocus(playableCards, playableCC, [CardColor.COEUR])
+        // - Je vais chercher la coupe si couleur < 3
+        const cutCard = RobotHelper.playCutFocus(playableCards, playableCC)
         if (cutCard) return cutCard
 
         // - Si turnIndex < 2/3 je sors mes grosses cartes pour reprendre la main, sauf à cœur
@@ -41,60 +36,79 @@ const pickACard = ({ gamePlayer, gamePlayers, deckCards, difficulty }: RobotPick
 
     const leadColor = deckCardsCaracs.leadCard.color
 
-    // On teste si on peut sortir le barbu
-    if (playableCC.hasRoiCoeur) {
-        // Si carreau et on n'a pas de carreau, on sort le barbu
-        if (leadColor === CardColor.CARREAU && playableCC.amountOfCarreaux === 0) {
-            return RobotHelper.getCard(playableCards, 13, CardColor.COEUR)
-        }
-        // idem pour pique
-        if (leadColor === CardColor.PIQUE && playableCC.amountOfPiques === 0) {
-            return RobotHelper.getCard(playableCards, 13, CardColor.COEUR)
-        }
-        // idem pour trèfle
-        if (leadColor === CardColor.TREFLE && playableCC.amountOfTrefles === 0) {
-            return RobotHelper.getCard(playableCards, 13, CardColor.COEUR)
-        }
-        // Si l'as sort, on sort le barbu
-        if (leadColor === CardColor.COEUR && deckCardsCaracs.hasAsCoeur) {
-            return RobotHelper.getCard(playableCards, 13, CardColor.COEUR)
-        }
-    }
-
     // Si je joue en dernier
     if (deckCardsCaracs.isLast) {
         // Je sors l'AS uniquement si :
-        // - couleur à coeur et pas de barbu
+        // - couleur et pas de roi
         if (leadColor === CardColor.COEUR && playableCC.hasAsCoeur && !deckCardsCaracs.hasRoiCoeur) {
             return RobotHelper.getCard(playableCards, 14, CardColor.COEUR)
+        }
+
+        if (leadColor === CardColor.CARREAU && playableCC.hasAsCarreau && !deckCardsCaracs.hasRoiCarreau) {
+            return RobotHelper.getCard(playableCards, 14, CardColor.CARREAU)
+        }
+
+        if (leadColor === CardColor.PIQUE && playableCC.hasAsPique && !deckCardsCaracs.hasRoiPique) {
+            return RobotHelper.getCard(playableCards, 14, CardColor.PIQUE)
+        }
+
+        if (leadColor === CardColor.TREFLE && playableCC.hasAsTrefle && !deckCardsCaracs.hasRoiTrefle) {
+            return RobotHelper.getCard(playableCards, 14, CardColor.TREFLE)
         }
     }
 
     // Jeu normal
     const haveLeadColor = RobotHelper.checkHaveLeadColor(leadColor, playableCards)
+    // - Si pas de coupe, je reprends la main avant 2/3 de la partie
     if (haveLeadColor) {
-        // - Si pas de coupe, je reprends la main avant 2/3 de la partie
         if (isEndOfTurns) return RobotHelper.getLowestValue(playableCards)
         else return RobotHelper.getHighestValue(playableCards)
     } else {
-        // - Si coupe, je sors d'abord roi de coeur > as de coeur > coupes > grosses cartes
+        // - Si coupe, je sors d'abord :
+        // -- rois
+        // -- as
+        // -- coupes avant 2/3 de la partie
+        // -- grosses cartes
+
+        // Rois
         if (playableCC.hasRoiCoeur) {
             return RobotHelper.getCard(playableCards, 13, CardColor.COEUR)
         }
+        if (playableCC.hasRoiCarreau) {
+            return RobotHelper.getCard(playableCards, 13, CardColor.CARREAU)
+        }
+        if (playableCC.hasRoiPique) {
+            return RobotHelper.getCard(playableCards, 13, CardColor.PIQUE)
+        }
+        if (playableCC.hasRoiTrefle) {
+            return RobotHelper.getCard(playableCards, 13, CardColor.TREFLE)
+        }
+
+        // As
         if (playableCC.hasAsCoeur) {
             return RobotHelper.getCard(playableCards, 14, CardColor.COEUR)
+        }
+        if (playableCC.hasAsCarreau) {
+            return RobotHelper.getCard(playableCards, 14, CardColor.CARREAU)
+        }
+        if (playableCC.hasAsPique) {
+            return RobotHelper.getCard(playableCards, 14, CardColor.PIQUE)
+        }
+        if (playableCC.hasAsTrefle) {
+            return RobotHelper.getCard(playableCards, 14, CardColor.TREFLE)
         }
 
         // Coupe
         const cutCard = RobotHelper.playCutFocus(playableCards, playableCC)
         if (cutCard) return cutCard
 
+        // Plus haute carte
         return RobotHelper.getHighestValue(playableCards)
     }
 }
 
-const SansBarbuRobotHelper = {
+const SansRoiRobotHelper = {
     pickACard,
 }
 
-export default SansBarbuRobotHelper
+export default SansRoiRobotHelper

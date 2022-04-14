@@ -1,10 +1,9 @@
-import { CSSProperties, Fragment, ReactNode, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { IconType } from 'react-icons'
 import { AiFillTrophy } from 'react-icons/ai'
 import { MdReplay } from 'react-icons/md'
 import IconButton from '../components/IconButton'
 import Modal from '../components/modal/Modal'
-import ModalContent from '../components/modal/ModalContent'
 import Spacer from '../components/Spacer'
 import GameHelper from '../helpers/GameHelper'
 import StyleHelper from '../helpers/StyleHelper'
@@ -132,6 +131,9 @@ const FullGame = () => {
                         })}
                     </div>
                 </div>
+            </div>
+            <div>
+                TODO : Attribuer un score aux différentes cartes en fonction du jeu en cours, des cartes jouées, etc
             </div>
             <Spacer half />
             {status === 'running' && (
