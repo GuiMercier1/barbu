@@ -1,47 +1,59 @@
-import { useState } from 'react'
+import { CSSProperties, Fragment, ReactNode, useState } from 'react'
+import { IconType } from 'react-icons'
+import { AiFillTrophy } from 'react-icons/ai'
+import { MdReplay } from 'react-icons/md'
+import IconButton from '../components/IconButton'
+import Modal from '../components/modal/Modal'
+import ModalContent from '../components/modal/ModalContent'
 import Spacer from '../components/Spacer'
 import GameHelper from '../helpers/GameHelper'
-import useSpacing from '../helpers/useSpacing'
+import StyleHelper from '../helpers/StyleHelper'
 import { GamePlayer, Player } from '../model'
+import FullGamePoints from './FullGamePoints'
 import Game from './Game/Game'
 
+const basePlayers: Player[] = [
+    {
+        id: 'player_1',
+        name: 'Joueur 1',
+        games: [],
+        globalPosition: 0,
+        isNPC: false,
+    },
+    {
+        id: 'player_2',
+        name: 'Joueur 2',
+        games: [],
+        globalPosition: 1,
+        isNPC: true,
+    },
+    {
+        id: 'player_3',
+        name: 'Joueur 3',
+        games: [],
+        globalPosition: 2,
+        isNPC: true,
+    },
+    {
+        id: 'player_4',
+        name: 'Joueur 4',
+        games: [],
+        globalPosition: 3,
+        isNPC: true,
+    },
+]
+
+type ActionData = {
+    action: () => void
+    icon: IconType
+}
+
 const FullGame = () => {
-    const spacing = useSpacing()
-
-    const basePlayers: Player[] = [
-        {
-            id: 'player_1',
-            name: 'Joueur 1',
-            games: [],
-            globalPosition: 0,
-            isNPC: false,
-        },
-        {
-            id: 'player_2',
-            name: 'Joueur 2',
-            games: [],
-            globalPosition: 1,
-            isNPC: true,
-        },
-        {
-            id: 'player_3',
-            name: 'Joueur 3',
-            games: [],
-            globalPosition: 2,
-            isNPC: true,
-        },
-        {
-            id: 'player_4',
-            name: 'Joueur 4',
-            games: [],
-            globalPosition: 3,
-            isNPC: true,
-        },
-    ]
-
     const [players, setPlayers] = useState<Player[]>(basePlayers)
     const [status, setStatus] = useState<'running' | 'finished'>('running')
     const [ruleIndex, setRuleIndex] = useState<number>(0)
+
+    const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const currentGame = GameHelper.allGamesRules[ruleIndex]
     const dealerID = players[Math.ceil(ruleIndex % players.length)].id
@@ -77,19 +89,50 @@ const FullGame = () => {
         } else setRuleIndex(nextRuleIndex)
     }
 
+    const startNew = () => {}
+
+    const showScores = () => {
+        setIsOpen(true)
+    }
+
+    const actions: ActionData[] = [
+        {
+            action: showScores,
+            icon: AiFillTrophy,
+        },
+        {
+            action: startNew,
+            icon: MdReplay,
+        },
+    ]
+
     return (
-        <div style={{ padding: spacing, paddingTop: 0 }}>
-            <h1>Le barbu !</h1>
-            <Spacer half />
-            <span>Total des points :</span>
-            <ul>
-                {players.map((player) => (
-                    <li key={player.id}>
-                        {player.name} :{' '}
-                        {player.games.map((game) => game.gamePoints).reduce((prev, current) => prev + current, 0)}
-                    </li>
-                ))}
-            </ul>
+        <div>
+            <div
+                style={{
+                    width: '100%',
+                    backgroundColor: StyleHelper.colors.main,
+                    padding: '0px 10px 0px 10px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}>
+                <h1 style={{ color: StyleHelper.colors.whiteText }}>Le barbu !</h1>
+                <div>{currentGame.label}</div>
+                <div>
+                    <div style={{ display: 'flex', paddingRight: 5 }}>
+                        {actions.map((actionData) => {
+                            return (
+                                <Fragment>
+                                    <ActionButton actionData={actionData} />
+                                    <Spacer half />
+                                </Fragment>
+                            )
+                        })}
+                    </div>
+                </div>
+            </div>
             <Spacer half />
             {status === 'running' && (
                 <Game
@@ -101,7 +144,22 @@ const FullGame = () => {
                 />
             )}
             {status === 'finished' && <span>Finished !</span>}
+            <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                <FullGamePoints players={players} />
+            </Modal>
         </div>
+    )
+}
+
+type ActionButtonProps = {
+    actionData: ActionData
+}
+
+const ActionButton = ({ actionData }: ActionButtonProps) => {
+    return (
+        <Fragment>
+            <IconButton action={actionData.action} Icon={actionData.icon} style="transparent" />
+        </Fragment>
     )
 }
 

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import Spacer from '../../components/Spacer'
 import CardHelper from '../../helpers/CardHelper'
+import StyleHelper from '../../helpers/StyleHelper'
 import { useTurn } from '../../helpers/useTurn'
 import { DeckCard, GamePlayer } from '../../model'
 
@@ -27,11 +28,11 @@ const DeckCardElement = ({ player, deckCard }: DeckCardElementProps) => {
             <Spacer half />
             <div
                 style={{
-                    width: CardHelper.sizes.width * 1,
-                    height: CardHelper.sizes.height * 1,
+                    width: StyleHelper.sizes.cardWidth * 1,
+                    height: StyleHelper.sizes.cardHeight * 1,
                     border: isWinningDeckCard ? '3px solid black' : '1px dashed black',
                 }}>
-                {deckCard && <img src={cardAsset} style={{ height: CardHelper.sizes.height }} />}
+                {deckCard && <img src={cardAsset} style={{ height: StyleHelper.sizes.cardHeight }} />}
             </div>
         </div>
     )
